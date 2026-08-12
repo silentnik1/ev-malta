@@ -28,15 +28,15 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 .brand-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 @media(min-width:700px){.brand-tiles{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.brand-tiles{grid-template-columns:repeat(4,1fr)}}
-.brand-tile{background:linear-gradient(135deg,#1a2035,#1e2a42);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;overflow:hidden;min-height:190px}
+.brand-tile{background:linear-gradient(135deg,#1a2035,#1e2a42);border:1px solid var(--border);border-radius:14px;padding:14px 16px 16px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:9px;position:relative;overflow:hidden;min-height:200px}
 .brand-tile:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px rgba(59,130,246,.15)}
-.brand-monogram{width:72px;height:72px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;margin-top:6px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.brand-monogram{width:68px;height:68px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;margin-top:18px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 .brand-tile-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;letter-spacing:-.2px;text-align:center}
 .brand-tile-hours{font-size:10px;color:var(--text3);text-align:center;display:flex;align-items:center;gap:3px}
 .brand-tile-footer{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:auto;padding-top:6px}
 .brand-tile-count{font-size:11px;color:var(--text2);background:rgba(255,255,255,.06);padding:3px 9px;border-radius:10px}
 .brand-tile-maps{font-size:11px;color:white;text-decoration:none;background:var(--accent);padding:4px 10px;border-radius:6px;white-space:nowrap}
-.brand-tile-status{position:absolute;top:10px;right:10px}
+.brand-tile-status{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:2}
 
 /* FULLSCREEN BRAND VIEW */
 .brand-fullscreen{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto}
@@ -135,6 +135,20 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 .specs-table td{padding:6px 8px;line-height:1.5}
 .specs-table td:first-child{color:var(--text3);width:45%}
 .specs-table td:last-child{color:var(--text);font-weight:500}
+.prices-table{width:100%;border-collapse:collapse;font-size:12px;min-width:420px}
+.prices-table th{text-align:left;padding:6px 8px;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);font-weight:500}
+.prices-table td{padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.price-cell,.note-cell{background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:5px 8px;font-size:12px;font-family:'Inter',sans-serif;width:100%;min-width:90px}
+.price-cell:focus,.note-cell:focus{outline:none;border-color:var(--accent)}
+.note-cell{min-width:120px}
+.incl-wrap{display:flex;flex-direction:column;gap:12px}
+.incl-cat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.incl-cat-title{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px}
+.incl-items{display:grid;grid-template-columns:1fr;gap:4px 12px}
+@media(min-width:500px){.incl-items{grid-template-columns:1fr 1fr}}
+@media(min-width:768px){.incl-items{grid-template-columns:1fr 1fr 1fr}}
+.incl-item{font-size:12px;color:var(--text2);line-height:1.4;padding-left:14px;position:relative}
+.incl-item:before{content:'✓';position:absolute;left:0;color:var(--accent2);font-size:11px}
 .polo-ref{color:var(--text3);font-weight:400;font-size:11px;margin-left:4px}
 
 /* FIELDS */
@@ -275,6 +289,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
       <div class="brand-fs-name" id="fsBrandName"></div>
       <div class="brand-fs-dealer" id="fsBrandDealer"></div>
     </div>
+    <select class="brand-status-select" id="fsBrandStatus" onchange="setBrandStatusAuto(this.value)" style="flex-shrink:0"></select>
   </div>
   <div class="brand-fs-body">
     <div class="brand-fs-controls" id="fsBrandControls"></div>
@@ -380,129 +395,9 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 let drivePhotoCache = {};   // { modelId: [url, url, ...] }
 let drivePhotosFolder = null; // ID of EV-Malta-Photos folder
 
-// ─── FEATURE CATEGORIES ──────────────────────────────────────────────
-const FEATURE_CATS = [
-  {key:'safety', label:'🔒 Безпека', items:[
-    'AEB (автогальмування)','Lane Assist','Blind Spot Monitor','Rear Traffic Alert',
-    'Driver Attention Alert','Speed Limit Display','Adaptive Cruise Control (ACC)',
-    'Park Assist (автопаркування)','Подушки безпеки — повний комплект','Euro NCAP 5 зірок',
-    'Передні парктроніки','Задні парктроніки','Камера заднього виду','Камера 360°'
-  ]},
-  {key:'media', label:'🎵 Мультимедіа', items:[
-    'Apple CarPlay / Android Auto','Wireless CarPlay','DAB Радіо',
-    'Екран 10"+','Екран 12"+','Цифрова панель приладів',
-    'Bluetooth Hands-Free','USB-C порти','Бездротова зарядка телефону',
-    'Навігація','Голосовий помічник','Преміум аудіосистема'
-  ]},
-  {key:'comfort', label:'🛋️ Комфорт', items:[
-    'Клімат-контроль 2-зонний','Підігрів сидінь','Електрорегулювання сидінь',
-    'Підігрів керма','Keyless Entry / Start','Електрозеркала з підігрівом',
-    'Складні задні сидіння','Панорамний дах','Амбієнтне підсвічування',
-    'ISOFIX','Електропривід багажника'
-  ]},
-  {key:'exterior', label:'💡 Зовнішнє', items:[
-    'LED фари','Автоматичне перемикання фар','DRL','Протитуманні фари',
-    'Легкосплавні диски 17"','Легкосплавні диски 18"','Легкосплавні диски 19"',
-    'Двоколірний дах','Затонований задній склопакет','Спортивні бампери'
-  ]},
-  {key:'ev', label:'⚡ EV-специфічне', items:[
-    'V2H (Vehicle to Home)','Рекуперативне гальмування (регульоване)','Режими їзди (Eco/Sport/Range)',
-    'Зарядний кабель Mode 3 (тип 2)','Домашній зарядний кабель 230V',
-    'LFP батарея','Підігрів батареї','Передбачувальне керування енергією',
-    'Preconditioning (прогрів/охолодження)',
-    'Швидка зарядка DC 100kВт+','Підключення до мережі (over-the-air оновлення)'
-  ]}
-];
-
-// ─── BRANDS ──────────────────────────────────────────────────────────
-const BRANDS = [
-  {
-    id:'hyundai', name:'Hyundai', icon:'🔵',
-    dealer:'Hyundai (Qormi)', addr:'Triq l-Imdina, Qormi',
-    hours:'Пн–Пт 9–18, Сб 9–12',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8754844,14.4624261&travelmode=driving',
-    modelIds:['inster','kona']
-  },
-  {
-    id:'kia', name:'Kia', icon:'⚡',
-    dealer:'Kia (Qormi)', addr:'Mdina Rd, Qormi',
-    hours:'Пн–Пт 9–18, Сб 9–12',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.875388,14.462107&travelmode=driving',
-    modelIds:['ev3']
-  },
-  {
-    id:'renault', name:'Renault', icon:'🔷',
-    dealer:'Auto Sales (Lija)', addr:'Triq Il-Mosta, Lija',
-    hours:'Пн–Вт 9–18, Сб 9–12',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.9049324,14.4384579&travelmode=driving',
-    modelIds:['r5','r4']
-  },
-  {
-    id:'opel', name:'Opel', icon:'⚡',
-    dealer:'Michael Attard (Attard)', addr:'Triq L-Imdina, Attard',
-    hours:'Пн–Пт 8–18, Сб 9–13',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8928527,14.4513759&travelmode=driving',
-    modelIds:['frontera','corsa']
-  },
-  {
-    id:'cupra', name:'Cupra', icon:'🏎️',
-    dealer:'Continental Cars (Msida)', addr:'Testaferrata St, Ta\'Xbiex',
-    hours:'Пн–Пт 9–18, Сб 9–12',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8991116,14.4914245&travelmode=driving',
-    modelIds:['raval','born']
-  },
-  {
-    id:'citroen', name:'Citroën', icon:'🔶',
-    dealer:'Michael Attard (Attard)', addr:'Triq L-Imdina, Attard',
-    hours:'Пн–Пт 9–18, Сб 9–13',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8930582,14.4513159&travelmode=driving',
-    modelIds:['ec3']
-  },
-  {
-    id:'peugeot', name:'Peugeot', icon:'🔶',
-    dealer:'Michael Attard (Ħamrun)', addr:'Triq Nazzjonali, Ħamrun',
-    hours:'Пн–Пт 8–18, Сб 8–12',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8889056,14.498630&travelmode=driving',
-    modelIds:['e208']
-  },
-  {
-    id:'nissan', name:'Nissan', icon:'🔴',
-    dealer:'Motor Sales (Blata l-Bajda)', addr:'National Road, Blata l-Bajda',
-    hours:'Пн–Пт 9–18, Сб 9–12',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8882869,14.497758&travelmode=driving',
-    modelIds:['leaf']
-  },
-  {
-    id:'fiat', name:'Fiat', icon:'🟡',
-    dealer:'Fiat/Alfa/Jeep (Qormi)', addr:'Mdina Rd, Qormi',
-    hours:'Пн–Пт 9–18, Сб 9–12',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8753276,14.4620695&travelmode=driving',
-    modelIds:['fiat500']
-  },
-  {
-    id:'honda', name:'Honda', icon:'🔴',
-    dealer:'GasanZammit (Birkirkara)', addr:'Mriehel Bypass, Birkirkara',
-    hours:'Пн–Пт 9–18, Сб 9–11:45',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8914247,14.4580001&travelmode=driving',
-    modelIds:['eny1']
-  },
-  {
-    id:'vw', name:'Volkswagen', icon:'⭕',
-    dealer:'Continental Cars (Msida)', addr:'Testaferrata St, Ta\'Xbiex',
-    hours:'Пн–Пт 9–18, Сб 9–12',
-    mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8991116,14.4914245&travelmode=driving',
-    modelIds:['id3']
-  },
-];
-
-const BRAND_COLORS={'hyundai':{bg:'#002c5f',fg:'#fff'},'kia':{bg:'#05141f',fg:'#fff'},'renault':{bg:'#efdf00',fg:'#000'},'opel':{bg:'#f7ff14',fg:'#000'},'cupra':{bg:'#94714f',fg:'#fff'},'citroen':{bg:'#6e6e6e',fg:'#fff'},'peugeot':{bg:'#1b1b3a',fg:'#fff'},'nissan':{bg:'#c3002f',fg:'#fff'},'fiat':{bg:'#8a1538',fg:'#fff'},'honda':{bg:'#cc0000',fg:'#fff'},'vw':{bg:'#001e50',fg:'#fff'},};
-
-const BRAND_STATUSES = [
-  {value:'none',   label:'— Не оцінено'},
-  {value:'interest',label:'👀 Цікаво'},
-  {value:'visited', label:'✅ Відвідав'},
-  {value:'skip',    label:'❌ Не цікавить'},
-];
+// ─── INCLUDED FEATURES (from dealer offers) ──────────────────────────
+const TRIM_INCLUDED = {"raval_plus": {"safety": ["Front Assist", "ACC follow-to-stop", "Speed Limiter", "ISOFIX + Top Tether (1+1)", "Подушки з деактивацією пасажирської", "Side/Exit/Emergency Assist", "Rear Traffic Assist", "Attention & Drowsiness Assist", "TPMS", "Парктроніки перед+зад", "Камера заднього виду", "Dynamic road sign display", "Електронний іммобілайзер"], "media": ["12.9\" екран DAB", "6 динаміків", "Bluetooth", "Голосове керування", "USB-C", "Android Auto / CarPlay / MirrorLink", "Бездротова зарядка телефону"], "comfort": ["2-зонний Climatronic Air-Care", "Спортивні сидіння регул. висоти (тканина)", "Складані задні сидіння", "Keyless + Digital key", "Амбієнтне світло", "Передні/задні читацькі лампи", "Heat-insulating вікна"], "exterior": ["LED фари 3D \"Coast to Coast\"", "18\" легкосплавні диски", "Спортивні бампери", "Power-folding дзеркала з welcome light"], "ev": ["CUPRA Drive Profile", "CUPRA Connect"]}, "raval_end": {"safety": ["Все з Plus +", "High-Beam Control", "Intelligent Park Assist (IPA)", "Remote Park Assist (RPA)", "Top view Camera (4 камери)", "Anti-theft alarm + interior monitoring"], "media": ["Все з Plus"], "comfort": ["Все з Plus +", "Leatherette кермо з satellite & paddle", "Sport сидіння woven, ручне регулювання"], "exterior": ["Все з Plus +", "Power-folding/heated дзеркала", "Door/side trim PVC"], "ev": ["CUPRA Drive Profile"]}, "raval_vz": {"safety": ["Все з Endurance +", "Top view Camera (4 камери)", "Park distance control перед+зад"], "media": ["Все з Endurance", "Бездротова зарядка телефону"], "comfort": ["Все з Endurance +", "2-зонний Climatronic Air-Care", "Bucket сидіння Dinamica з інтегр. підголівниками", "Dark tinted вікна", "Megabox + подвійна підлога"], "exterior": ["VZ спортивні бампери", "LED 3D \"Coast to Coast\"", "19\" диски Rebel Black/Copper", "Exterior illumination у ручках дверей"], "ev": ["Bidirectional Charge V2H", "Sport suspension (DCC), eVAQ", "Digital Key"]}, "born_58": {"safety": ["Lane Assist", "Front Assist", "ACC + Speed Limiter", "AEB (автономне гальмування)", "Tiredness Recognition", "TPMS", "Ultrasonic парктроніки перед+зад", "Подушки: front/side/central/curtain/rear/knee", "Alarm + іммобілайзер", "ISOFIX + Top Tether (1+1)"], "media": ["12\" екран DAB", "5 динаміків", "Bluetooth hands-free", "Audio streaming", "2 USB-C перед + 2 ззаду", "Голосове керування", "Android Auto / CarPlay / MirrorLink"], "comfort": ["2-зонний Climatronic Air-Care", "CUPRA Sport сидіння регул. висоти", "Keyless locking & starting", "Складані задні сидіння", "Центральна консоль з cup holder", "Progressive Steering + підігрів керма", "Автозатемнення дзеркала"], "exterior": ["Full LED фари з cornering + bad weather", "Full LED Infinite ліхтарі", "18\" CYCLONE диски", "Dark tinted вікна", "Sports pedals aluminum", "Power-folding дзеркала Liquid Grey"], "ev": ["CUPRA Drive Profile (Range/Comfort/Performance/Individual)", "CUPRA Connect", "CUPRA e-Sound (AVAS)", "Charging Cable Mode 3 Type 2/16A"]}, "frontera_ed": {"safety": ["ABS & AEB", "Lane keep assist", "Active safety brake + Collision warning", "ESC", "Speed limit display panel", "Speed limiter", "Подушки: driver/passenger/lateral/curtain/thorax", "Driver Attention Alert", "Drowsiness Alert", "Rear parking sensors", "Rear child safety locks"], "media": ["10\" кольоровий цифровий кластер", "Smart Phone Station"], "comfort": ["Airconditioning", "Electric handbrake", "Cruise Control", "Remote central locking", "Ergonomic сидіння з інтегр. підголівниками", "Rear 2/3-1/3 folding з регул. висоти", "ISOFIX (2 ряд)", "Double bottom rear floor", "Regenerative Braking"], "exterior": ["16\" сталеві диски з чорними ковпаками", "ECO LED фари", "Auto LED lights", "Automatic wipers", "Grained black дзеркала з LED поворотниками", "Front/rear електросклопідйомники", "Acoustic windscreen"], "ev": ["Puncture repair kit", "LFP батарея", "AC OBC 7.4 кВт (11 опція)", "DC до 100 кВт"]}, "frontera_edp": {"safety": ["Все з Edition", "Reversing Camera"], "media": ["Все з Edition +", "10.25\" Infotainment touchscreen Bluetooth", "Android Auto / Apple CarPlay / DAB", "Navigation", "4 USB Type C", "Wireless Mobile Charger"], "comfort": ["Все з Edition +", "Front Armrest", "Alarm", "Leather кермо з radio controls"], "exterior": ["Все з Edition"], "ev": ["LFP батарея", "AC OBC 7.4 кВт (11 опція)", "DC до 100 кВт"]}, "frontera_gs400": {"safety": ["Все з Edition Pack", "Blind spot monitoring sensor", "Front parking sensors"], "media": ["Все з Edition Pack"], "comfort": ["Все з Edition Pack +", "Climate Control Airconditioning", "Electrochromic дзеркало", "Chrome interior door handles", "LED interior lighting"], "exterior": ["17\" Black Alloy Diamond cut", "Two Tone Roof (Black)", "Front/Rear coloured bumper skid plates", "Rear Glass Over tint", "Electric folding black gloss дзеркала"], "ev": ["LFP батарея", "AC OBC 7.4 кВт (11 опція)", "DC до 100 кВт", "Rear left charging point"]}, "frontera_gs300": {"safety": ["Все з Edition Pack", "Blind spot monitoring sensor", "Front parking sensors"], "media": ["Все з Edition Pack"], "comfort": ["Все з Edition Pack +", "Climate Control Airconditioning", "Electrochromic дзеркало", "Chrome interior door handles", "LED interior lighting"], "exterior": ["17\" Black Alloy Diamond cut", "Two Tone Roof (Black)", "Front/Rear coloured bumper skid plates", "Rear Glass Over tint", "Electric folding black gloss дзеркала"], "ev": ["LFP батарея", "AC OBC 7.4 кВт (11 опція)", "DC до 100 кВт", "Rear left charging point"]}};
+const INCLUDED_CATS = {"safety": "🔒 Безпека", "media": "🎵 Мультимедіа", "comfort": "🛋️ Комфорт", "exterior": "💡 Зовнішнє", "ev": "⚡ EV"};
 
 // ─── POLO REFERENCE ───────────────────────────────────────────────────
 const POLO = {
@@ -950,6 +845,9 @@ async function openBrandView(brandId){
 
   document.getElementById('fsBrandName').textContent=`${brand.icon} ${brand.name}`;
   document.getElementById('fsBrandDealer').textContent=brand.dealer;
+  const statusSel=document.getElementById('fsBrandStatus');
+  statusSel.innerHTML=BRAND_STATUSES.map(s=>`<option value="${s.value}" ${bd.status===s.value?'selected':''}>${s.label}</option>`).join('');
+  statusSel.style.display='';
 
   // Controls: status, maps, hours, note
   document.getElementById('fsBrandControls').innerHTML=`
@@ -957,15 +855,8 @@ async function openBrandView(brandId){
       <span class="brand-hours">🕐 ${brand.hours}</span>
       <a href="${brand.mapsUrl}" target="_blank" style="font-size:12px;color:white;text-decoration:none;background:var(--accent);padding:5px 12px;border-radius:6px">🧭 Маршрут</a>
     </div>
-    <div class="brand-fs-info-row">
-      <select class="brand-status-select" style="flex:1" onchange="setBrandStatus('${brandId}',this.value)">
-        ${BRAND_STATUSES.map(s=>`<option value="${s.value}" ${bd.status===s.value?'selected':''}>${s.label}</option>`).join('')}
-      </select>
-      <button class="brand-save-btn" onclick="saveBrandData('${brandId}')">Зберегти</button>
-      <span class="save-msg" id="bmsg-${brandId}">✓</span>
-    </div>
-    <textarea class="brand-note-input" rows="2" placeholder="Нотатки про бренд / салон..." onchange="setBrandNote('${brandId}',this.value)">${bd.note||''}</textarea>
-    ${accessToken?`<button onclick="refreshBrandPhotos('${brandId}')" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif">🔄 Оновити фото з Drive</button>`:''}`;
+    <textarea class="brand-note-input" rows="2" placeholder="Нотатки про бренд / салон..." onchange="setBrandNoteAuto('${brandId}',this.value)">${bd.note||''}</textarea>
+`;
 
   // Models
   const container=document.getElementById('fsBrandModels');
@@ -990,6 +881,7 @@ function openCustomView(){
   const unbranded=models.filter(m=>!brandedIds.includes(m.id)&&!BUILTIN_MODELS.find(b=>b.id===m.id));
   document.getElementById('fsBrandName').textContent='➕ Інші авто';
   document.getElementById('fsBrandDealer').textContent='Додані вручну';
+  document.getElementById('fsBrandStatus').style.display='none';
   document.getElementById('fsBrandControls').innerHTML='';
   const container=document.getElementById('fsBrandModels');
   container.innerHTML='';
@@ -1029,17 +921,6 @@ async function uploadModelPhoto(modelId,files){
   setTimeout(()=>{if(statusEl)statusEl.textContent='';},2000);
 }
 
-async function refreshBrandPhotos(brandId){
-  const brand=BRANDS.find(b=>b.id===brandId);
-  if(!brand)return;
-  const brandModels=brand.modelIds.map(id=>models.find(m=>m.id===id)).filter(Boolean);
-  for(const model of brandModels){
-    delete drivePhotoCache[model.id];
-    const urls=await loadModelPhotos(model.id);
-    if(urls.length)updateModelGallery(model.id,urls);
-  }
-}
-
 function updateModelGallery(modelId,urls){
   const gallery=document.getElementById('gal-'+modelId);
   if(!gallery)return;
@@ -1051,16 +932,79 @@ function updateModelGallery(modelId,urls){
 
 
 function getBrandData(bid){if(!userData['brand_'+bid])userData['brand_'+bid]={status:'none',note:''};return userData['brand_'+bid];}
-function setBrandStatus(bid,val){
-  getBrandData(bid).status=val;
-  const badge=document.getElementById('bbadge-'+bid);
-  const s=BRAND_STATUSES.find(s=>s.value===val);
-  if(badge){badge.textContent=s.label;badge.className='status-badge brand-badge-'+val;}
+function setBrandStatusAuto(val){
+  if(!currentBrandId)return;
+  getBrandData(currentBrandId).status=val;
+  saveLocal();saveToDrive();
 }
-function setBrandNote(bid,val){getBrandData(bid).note=val;}
-async function saveBrandData(bid){
-  saveLocal();await saveToDrive();
-  const msg=document.getElementById('bmsg-'+bid);if(msg){msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2000);}
+function setBrandNoteAuto(bid,val){
+  getBrandData(bid).note=val;
+  saveLocal();saveToDrive();
+}
+function renderIncludedFeatures(trimId){
+  const data=TRIM_INCLUDED[trimId];
+  if(!data){
+    return `<div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;color:var(--text3);text-align:center">Дані комплектації не заповнені</div>`;
+  }
+  const cats=Object.keys(INCLUDED_CATS).filter(k=>data[k]&&data[k].length);
+  const blocks=cats.map(k=>{
+    const items=data[k].map(it=>`<div class="incl-item">${it}</div>`).join('');
+    return `<div class="incl-cat">
+      <div class="incl-cat-title">${INCLUDED_CATS[k]}</div>
+      <div class="incl-items">${items}</div>
+    </div>`;
+  }).join('');
+  return `<div>
+    <div class="field-label" style="margin-bottom:8px">🎁 Що включено в комплектацію</div>
+    <div class="incl-wrap">${blocks}</div>
+  </div>`;
+}
+
+function renderPricesTable(model){
+  const trims=model.trims||[];
+  if(!trims.length)return '<div style="color:var(--text3);font-size:12px;padding:8px">Немає комплектацій</div>';
+  const rows=trims.map(t=>{
+    const ud=getTrimData(t.id);
+    return `<tr>
+      <td style="font-weight:500;color:var(--text)">${t.name}</td>
+      <td style="color:var(--text3);font-size:11px">${t.price||'—'}</td>
+      <td><input class="price-cell" type="text" placeholder="твоя ціна" value="${ud.price||''}" onchange="setTrimPrice('${t.id}',this.value);refreshModelHeader('${model.id}')" onclick="event.stopPropagation()"></td>
+      <td><input class="note-cell" type="text" placeholder="нотатка" value="${(ud.notes||'').replace(/"/g,'&quot;')}" onchange="setTrimNotes('${t.id}',this.value)" onclick="event.stopPropagation()"></td>
+      <td><button onclick="event.stopPropagation();saveTrimData('${t.id}')" style="background:var(--accent);color:white;border:none;padding:4px 8px;border-radius:5px;font-size:11px;cursor:pointer">💾</button></td>
+    </tr>`;
+  }).join('');
+  return `<div style="overflow-x:auto"><table class="prices-table">
+    <thead><tr><th>Комплектація</th><th>Орієнт.</th><th>Твоя ціна</th><th>Нотатка</th><th></th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+function refreshModelHeader(modelId){
+  const model=models.find(m=>m.id===modelId);
+  if(!model)return;
+  const meta=document.querySelector(`#mblock-${modelId} .model-meta`);
+  if(meta)meta.innerHTML=`${minPriceLabel(model)} · ${(model.trims||[]).length} компл.`;
+}
+
+function minPriceLabel(model){
+  // Extract numeric prices from trims, return "від €XX.XK"
+  const prices=[];
+  (model.trims||[]).forEach(t=>{
+    // Check user price first, then trim price
+    const ud=getTrimData(t.id);
+    const src=(ud.price||t.price||'');
+    // Find first euro amount
+    const m=src.match(/€\s?([\d,\.]+)\s?[kK]?/);
+    if(m){
+      let num=parseFloat(m[1].replace(/,/g,''));
+      if(src.match(/[kK]/)&&num<1000)num*=1000;
+      if(num>0)prices.push(num);
+    }
+  });
+  if(!prices.length)return (model.trims||[]).length+' компл.';
+  const min=Math.min(...prices);
+  const label=min>=1000?'€'+(min/1000).toFixed(1).replace(/\.0$/,'')+'K':'€'+min;
+  return 'від '+label;
 }
 
 function renderModelBlock(model,container){
@@ -1086,11 +1030,15 @@ function renderModelBlock(model,container){
     const sharedHtml=`
       <div>
         <div class="specs-tabs">
-          <div class="specs-tab active" id="mstab-${model.id}-dim" onclick="mSwitchSpecs('${model.id}','dim')">📐 Габарити</div>
+          <div class="specs-tab active" id="mstab-${model.id}-prices" onclick="mSwitchSpecs('${model.id}','prices')">💰 Ціни</div>
+          <div class="specs-tab" id="mstab-${model.id}-dim" onclick="mSwitchSpecs('${model.id}','dim')">📐 Габарити</div>
           <div class="specs-tab" id="mstab-${model.id}-charge" onclick="mSwitchSpecs('${model.id}','charge')">🔌 Зарядка</div>
           <div class="specs-tab" id="mstab-${model.id}-ncap" onclick="mSwitchSpecs('${model.id}','ncap')">⭐ Безпека</div>
         </div>
-        <div class="specs-panel active" id="mspanel-${model.id}-dim">
+        <div class="specs-panel active" id="mspanel-${model.id}-prices">
+          ${renderPricesTable(model)}
+        </div>
+        <div class="specs-panel" id="mspanel-${model.id}-dim">
           <table class="specs-table">
             <tr><td>Довжина</td><td>${s.len||'—'} ${pr(POLO.len)}</td></tr>
             <tr><td>Ширина</td><td>${s.width||'—'} ${pr(POLO.width)}</td></tr>
@@ -1125,7 +1073,8 @@ function renderModelBlock(model,container){
             <div class="model-icon">${model.icon||'🚗'}</div>
             <div>
               <div class="model-name">${model.name}</div>
-              <div class="model-meta">${model.dealer||''} · ${(model.trims||[]).length} компл.</div>
+              <div class="model-meta">${minPriceLabel(model)} · ${(model.trims||[]).length} компл.</div>
+              ${model.shared?.note?`<div style="font-size:11px;color:#f59e0b;margin-top:3px">⚠️ ${model.shared.note}</div>`:''}
             </div>
           </div>
           <div class="model-right">
@@ -1201,23 +1150,7 @@ function renderTrim(model,trim){
         <tr><td>Гарантія</td><td>${trim.warranty||'—'}</td></tr>
       </table>
 
-      <div>
-        <div class="field-label" style="margin-bottom:8px">Комплектація — що включено</div>
-        ${FEATURE_CATS.map(cat=>`
-          <div style="margin-bottom:10px">
-            <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">${cat.label}</div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px">
-              ${cat.items.map(item=>{
-                const checked=(getTrimData(trim.id).features||{})[cat.key+'_'+item.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_')];
-                return`<label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);cursor:pointer;background:var(--bg);border:1px solid ${checked?'var(--accent)':'var(--border)'};border-radius:6px;padding:4px 8px;transition:all .15s">
-                  <input type="checkbox" ${checked?'checked':''} style="accent-color:var(--accent)" onchange="setFeature('${trim.id}','${cat.key}','${item.replace(/'/g,"\\'")}',this.checked)">
-                  ${item}
-                </label>`;
-              }).join('')}
-            </div>
-          </div>
-        `).join('')}
-      </div>
+      ${renderIncludedFeatures(trim.id)}
       <div>
         <div class="field-label">Фактична ціна від дилера</div>
         <input class="field-input" type="text" placeholder="напр. €36,900 (після гранту €28,900)" value="${d.price||''}" onchange="setTrimPrice('${trim.id}',this.value)">
@@ -1245,7 +1178,7 @@ function renderTrim(model,trim){
 }
 
 function mSwitchSpecs(mid,tab){
-  ['dim','charge','ncap'].forEach(t=>{
+  ['prices','dim','charge','ncap'].forEach(t=>{
     document.getElementById(`mstab-${mid}-${t}`)?.classList.toggle('active',t===tab);
     document.getElementById(`mspanel-${mid}-${t}`)?.classList.toggle('active',t===tab);
   });
@@ -1282,14 +1215,6 @@ function setTrimStatus(tid,val){
   if(badge){badge.textContent=s.label;badge.className=`status-badge status-${val}`;}
 }
 function setTrimNotes(tid,val){getTrimData(tid).notes=val;}
-function setFeature(tid,cat,item,checked){
-  const d=getTrimData(tid);
-  if(!d.features)d.features={};
-  const key=cat+'_'+item.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_');
-  if(checked)d.features[key]=true;else delete d.features[key];
-  // update border color
-  event.target.closest('label').style.borderColor=checked?'var(--accent)':'var(--border)';
-}
 function setTrimPrice(tid,val){getTrimData(tid).price=val;}
 async function saveTrimData(tid){
   saveLocal();await saveToDrive();renderSummary();
