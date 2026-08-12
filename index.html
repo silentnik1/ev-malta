@@ -28,16 +28,15 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 .brand-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 @media(min-width:700px){.brand-tiles{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.brand-tiles{grid-template-columns:repeat(4,1fr)}}
-.brand-tile{background:linear-gradient(135deg,#1a2035,#1e2a42);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+.brand-tile{background:linear-gradient(135deg,#1a2035,#1e2a42);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;overflow:hidden;min-height:190px}
 .brand-tile:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px rgba(59,130,246,.15)}
-.brand-tile-icon{width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:22px}
-.brand-tile-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;letter-spacing:-.2px}
-.brand-tile-dealer{font-size:11px;color:var(--text3);line-height:1.4}
-.brand-tile-hours{font-size:10px;color:var(--text3);margin-top:2px}
-.brand-tile-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px;gap:6px}
-.brand-tile-count{font-size:11px;color:var(--text2);background:rgba(255,255,255,.06);padding:2px 8px;border-radius:10px}
-.brand-tile-maps{font-size:11px;color:white;text-decoration:none;background:var(--accent);padding:4px 9px;border-radius:6px;white-space:nowrap}
-.brand-tile-status{position:absolute;top:12px;right:12px}
+.brand-monogram{width:72px;height:72px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;margin-top:6px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.brand-tile-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;letter-spacing:-.2px;text-align:center}
+.brand-tile-hours{font-size:10px;color:var(--text3);text-align:center;display:flex;align-items:center;gap:3px}
+.brand-tile-footer{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:auto;padding-top:6px}
+.brand-tile-count{font-size:11px;color:var(--text2);background:rgba(255,255,255,.06);padding:3px 9px;border-radius:10px}
+.brand-tile-maps{font-size:11px;color:white;text-decoration:none;background:var(--accent);padding:4px 10px;border-radius:6px;white-space:nowrap}
+.brand-tile-status{position:absolute;top:10px;right:10px}
 
 /* FULLSCREEN BRAND VIEW */
 .brand-fullscreen{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto}
@@ -496,6 +495,8 @@ const BRANDS = [
   },
 ];
 
+const BRAND_COLORS={'hyundai':{bg:'#002c5f',fg:'#fff'},'kia':{bg:'#05141f',fg:'#fff'},'renault':{bg:'#efdf00',fg:'#000'},'opel':{bg:'#f7ff14',fg:'#000'},'cupra':{bg:'#94714f',fg:'#fff'},'citroen':{bg:'#6e6e6e',fg:'#fff'},'peugeot':{bg:'#1b1b3a',fg:'#fff'},'nissan':{bg:'#c3002f',fg:'#fff'},'fiat':{bg:'#8a1538',fg:'#fff'},'honda':{bg:'#cc0000',fg:'#fff'},'vw':{bg:'#001e50',fg:'#fff'},};
+
 const BRAND_STATUSES = [
   {value:'none',   label:'— Не оцінено'},
   {value:'interest',label:'👀 Цікаво'},
@@ -904,17 +905,16 @@ function renderCars(){
     const tile=document.createElement('div');
     tile.className='brand-tile';
     tile.onclick=()=>openBrandView(brand.id);
+    const col=BRAND_COLORS[brand.id]||{bg:'#3b82f6',fg:'#fff'};
+    const monogram=brand.name.charAt(0).toUpperCase();
     tile.innerHTML=`
       ${bd.status!=='none'?`<span class="status-badge brand-badge-${bd.status} brand-tile-status">${bStatus.label}</span>`:''}
-      <div class="brand-tile-icon">${brand.icon}</div>
-      <div>
-        <div class="brand-tile-name">${brand.name}</div>
-        <div class="brand-tile-dealer">${brand.dealer}</div>
-        <div class="brand-tile-hours">🕐 ${brand.hours}</div>
-      </div>
+      <div class="brand-monogram" style="background:${col.bg};color:${col.fg}">${monogram}</div>
+      <div class="brand-tile-name">${brand.name}</div>
+      <div class="brand-tile-hours">🕐 ${brand.hours}</div>
       <div class="brand-tile-footer">
         <span class="brand-tile-count">${brandModels.length} мод.</span>
-        <a href="${brand.mapsUrl}" target="_blank" class="brand-tile-maps" onclick="event.stopPropagation()">🧭 Maps</a>
+        <a href="${brand.mapsUrl}" target="_blank" class="brand-tile-maps" onclick="event.stopPropagation()">🧭 Маршрут</a>
       </div>`;
     grid.appendChild(tile);
   });
