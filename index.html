@@ -689,7 +689,33 @@ function loadLocal(){
 // ─── DRIVE ────────────────────────────────────────────────────────────
 function handleAuth(){const cid=window._EV_CLIENT_ID||'';if(!cid){openModal('setupModal');return;}if(accessToken)signOut();else startOAuth(cid);}
 function startOAuth(cid){const p=new URLSearchParams({client_id:cid,redirect_uri:location.href.split('?')[0].split('#')[0],response_type:'token',scope:SCOPES,prompt:'consent'});location.href='https://accounts.google.com/o/oauth2/auth?'+p;}
-function checkOAuthCallback(){const h=location.hash;if(!h.includes('access_token'))return;const p=new URLSearchParams(h.substring(1));accessToken=p.get('access_token');tokenExpiredFlag=false;history.replaceState({},'',location.pathname);document.getElementById('authBtn').style.background='';setDriveUI(true);loadFromDrive();}
+function checkOAuthCallback(){
+  const h=location.hash;
+  if(h.includes('access_token')){
+    const p=new URLSearchParams(h.substring(1));
+    accessToken=p.get('access_token');
+    tokenExpiredFlag=false;
+    // Persist token + expiry (tokens last ~1h)
+    const expiresIn=parseInt(p.get('expires_in')||'3600',10);
+    localStorage.setItem('ev_token',accessToken);
+    localStorage.setItem('ev_token_exp',Date.now()+expiresIn*1000);
+    history.replaceState({},'',location.pathname);
+    document.getElementById('authBtn').style.background='';
+    setDriveUI(true);loadFromDrive();
+    return;
+  }
+  // Try restore token from localStorage
+  const saved=localStorage.getItem('ev_token');
+  const exp=parseInt(localStorage.getItem('ev_token_exp')||'0',10);
+  if(saved&&Date.now()<exp-60000){
+    accessToken=saved;tokenExpiredFlag=false;
+    document.getElementById('authBtn').style.background='';
+    setDriveUI(true);loadFromDrive();
+  }else if(saved){
+    // Expired
+    localStorage.removeItem('ev_token');localStorage.removeItem('ev_token_exp');
+  }
+}
 function setDriveUI(ok){
   document.getElementById('authBtn').textContent=ok?'✓ Drive підключено':'Підключити Drive';
   document.getElementById('authBtn').classList.toggle('connected',ok);
@@ -701,6 +727,7 @@ function handleTokenExpired(){
   tokenExpiredFlag=true;
   accessToken=null;
   drivePhotoCache={};
+  localStorage.removeItem('ev_token');localStorage.removeItem('ev_token_exp');
   const btn=document.getElementById('authBtn');
   btn.textContent='🔄 Оновити підключення';
   btn.classList.remove('connected');
@@ -708,7 +735,7 @@ function handleTokenExpired(){
   const s=document.getElementById('driveStatus');
   s.textContent='Підключення застаріло';s.className='drive-status error';
 }
-function signOut(){accessToken=null;driveFileId=null;setDriveUI(false);}
+function signOut(){accessToken=null;driveFileId=null;localStorage.removeItem('ev_token');localStorage.removeItem('ev_token_exp');setDriveUI(false);}
 async function saveToDrive(){
   if(!accessToken){saveLocal();return;}
   try{
@@ -978,6 +1005,30 @@ function closeBrandView(){
   renderCars();
 }
 
+async function uploadModelPhoto(modelId,files){
+  if(!accessToken){alert('Спершу підключи Drive');return;}
+  const folderId=await ensureModelFolder(modelId);
+  if(!folderId){alert('Не вдалося створити папку в Drive');return;}
+  const statusEl=document.getElementById('photoup-'+modelId);
+  for(const file of files){
+    if(!file.type.startsWith('image/'))continue;
+    if(statusEl)statusEl.textContent='⏳ Завантаження '+file.name+'...';
+    try{
+      const meta=JSON.stringify({name:file.name,parents:[folderId]});
+      const form=new FormData();
+      form.append('metadata',new Blob([meta],{type:'application/json'}));
+      form.append('file',file);
+      const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',{method:'POST',headers:{Authorization:`Bearer ${accessToken}`},body:form});
+      if(r.status===401){handleTokenExpired();return;}
+    }catch(e){}
+  }
+  if(statusEl)statusEl.textContent='✓ Завантажено';
+  delete drivePhotoCache[modelId];
+  const urls=await loadModelPhotos(modelId);
+  if(urls.length)updateModelGallery(modelId,urls);
+  setTimeout(()=>{if(statusEl)statusEl.textContent='';},2000);
+}
+
 async function refreshBrandPhotos(brandId){
   const brand=BRANDS.find(b=>b.id===brandId);
   if(!brand)return;
@@ -1085,6 +1136,13 @@ function renderModelBlock(model,container){
         </div>
         <div class="model-detail ${openModels[model.id]?'open':''}" id="mdetail-${model.id}">
           ${gallHtml}
+          ${accessToken?`<div style="display:flex;align-items:center;gap:8px;margin-top:-4px">
+            <label style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:5px">
+              📤 Завантажити фото
+              <input type="file" accept="image/*" multiple style="display:none" onchange="uploadModelPhoto('${model.id}',Array.from(this.files))">
+            </label>
+            <span style="font-size:11px;color:var(--text3)" id="photoup-${model.id}"></span>
+          </div>`:''}
           ${sharedHtml}
         </div>
       </div>
