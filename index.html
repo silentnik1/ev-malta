@@ -689,11 +689,24 @@ function loadLocal(){
 // ─── DRIVE ────────────────────────────────────────────────────────────
 function handleAuth(){const cid=window._EV_CLIENT_ID||'';if(!cid){openModal('setupModal');return;}if(accessToken)signOut();else startOAuth(cid);}
 function startOAuth(cid){const p=new URLSearchParams({client_id:cid,redirect_uri:location.href.split('?')[0].split('#')[0],response_type:'token',scope:SCOPES,prompt:'consent'});location.href='https://accounts.google.com/o/oauth2/auth?'+p;}
-function checkOAuthCallback(){const h=location.hash;if(!h.includes('access_token'))return;const p=new URLSearchParams(h.substring(1));accessToken=p.get('access_token');history.replaceState({},'',location.pathname);setDriveUI(true);loadFromDrive();}
+function checkOAuthCallback(){const h=location.hash;if(!h.includes('access_token'))return;const p=new URLSearchParams(h.substring(1));accessToken=p.get('access_token');tokenExpiredFlag=false;history.replaceState({},'',location.pathname);document.getElementById('authBtn').style.background='';setDriveUI(true);loadFromDrive();}
 function setDriveUI(ok){
   document.getElementById('authBtn').textContent=ok?'✓ Drive підключено':'Підключити Drive';
   document.getElementById('authBtn').classList.toggle('connected',ok);
   const s=document.getElementById('driveStatus');s.textContent=ok?'Синхронізовано':'Google Drive';s.className='drive-status'+(ok?' ok':'');
+}
+let tokenExpiredFlag=false;
+function handleTokenExpired(){
+  if(tokenExpiredFlag)return;
+  tokenExpiredFlag=true;
+  accessToken=null;
+  drivePhotoCache={};
+  const btn=document.getElementById('authBtn');
+  btn.textContent='🔄 Оновити підключення';
+  btn.classList.remove('connected');
+  btn.style.background='var(--warn)';
+  const s=document.getElementById('driveStatus');
+  s.textContent='Підключення застаріло';s.className='drive-status error';
 }
 function signOut(){accessToken=null;driveFileId=null;setDriveUI(false);}
 async function saveToDrive(){
@@ -702,7 +715,8 @@ async function saveToDrive(){
     const payload=JSON.stringify({userData,customModels},null,2);
     const blob=new Blob([payload],{type:'application/json'});
     if(driveFileId){
-      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`,{method:'PATCH',headers:{Authorization:`Bearer ${accessToken}`,'Content-Type':'application/json'},body:blob});
+      const pr=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`,{method:'PATCH',headers:{Authorization:`Bearer ${accessToken}`,'Content-Type':'application/json'},body:blob});
+      if(pr.status===401){handleTokenExpired();return;}
     }else{
       const form=new FormData();
       form.append('metadata',new Blob([JSON.stringify({name:FILE_NAME})],{type:'application/json'}));
@@ -769,8 +783,19 @@ async function loadModelPhotos(modelId){
     if(!folderId){drivePhotoCache[modelId]=[];return [];}
     const q=encodeURIComponent(`'${folderId}' in parents and mimeType contains 'image/' and trashed=false`);
     const r=await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)&orderBy=name`,{headers:{Authorization:`Bearer ${accessToken}`}});
+    if(r.status===401){handleTokenExpired();return [];}
     const j=await r.json();
-    const urls=(j.files||[]).map(f=>`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media&access_token=${accessToken}`);
+    const files=j.files||[];
+    // Fetch each image as a blob (keeps them private, avoids token-in-URL issues)
+    const urls=[];
+    for(const f of files){
+      try{
+        const imgRes=await fetch(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,{headers:{Authorization:`Bearer ${accessToken}`}});
+        if(imgRes.status===401){handleTokenExpired();break;}
+        const blob=await imgRes.blob();
+        urls.push(URL.createObjectURL(blob));
+      }catch(e){}
+    }
     drivePhotoCache[modelId]=urls;
     return urls;
   }catch(e){drivePhotoCache[modelId]=[];return [];}
@@ -912,7 +937,8 @@ async function openBrandView(brandId){
       <button class="brand-save-btn" onclick="saveBrandData('${brandId}')">Зберегти</button>
       <span class="save-msg" id="bmsg-${brandId}">✓</span>
     </div>
-    <textarea class="brand-note-input" rows="2" placeholder="Нотатки про бренд / салон..." onchange="setBrandNote('${brandId}',this.value)">${bd.note||''}</textarea>`;
+    <textarea class="brand-note-input" rows="2" placeholder="Нотатки про бренд / салон..." onchange="setBrandNote('${brandId}',this.value)">${bd.note||''}</textarea>
+    ${accessToken?`<button onclick="refreshBrandPhotos('${brandId}')" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif">🔄 Оновити фото з Drive</button>`:''}`;
 
   // Models
   const container=document.getElementById('fsBrandModels');
@@ -950,6 +976,17 @@ function closeBrandView(){
   document.body.style.overflow='';
   currentBrandId=null;
   renderCars();
+}
+
+async function refreshBrandPhotos(brandId){
+  const brand=BRANDS.find(b=>b.id===brandId);
+  if(!brand)return;
+  const brandModels=brand.modelIds.map(id=>models.find(m=>m.id===id)).filter(Boolean);
+  for(const model of brandModels){
+    delete drivePhotoCache[model.id];
+    const urls=await loadModelPhotos(model.id);
+    if(urls.length)updateModelGallery(model.id,urls);
+  }
 }
 
 function updateModelGallery(modelId,urls){
