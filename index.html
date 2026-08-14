@@ -404,13 +404,13 @@ let drivePhotosFolder = null; // ID of EV-Malta-Photos folder
 // ─── BRANDS ──────────────────────────────────────────────────────────
 const BRANDS = [
   {id:'hyundai',name:'Hyundai',icon:'🔵',dealer:'Hyundai (Qormi)',addr:'Triq l-Imdina, Qormi',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8754844,14.4624261&travelmode=driving',modelIds:['inster','kona','ioniq5']},
-  {id:'kia',name:'Kia',icon:'⚡',dealer:'Kia (Qormi)',addr:'Mdina Rd, Qormi',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.875388,14.462107&travelmode=driving',modelIds:['ev3']},
+  {id:'kia',name:'Kia',icon:'⚡',dealer:'Kia (Qormi)',addr:'Mdina Rd, Qormi',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.875388,14.462107&travelmode=driving',modelIds:['ev3','niro_ev','ev2']},
   {id:'renault',name:'Renault',icon:'🔷',dealer:'Auto Sales (Lija)',addr:'Triq Il-Mosta, Lija',hours:'Пн–Вт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.9049324,14.4384579&travelmode=driving',modelIds:['r5','r4','zoe','megane_e','scenic_e']},
   {id:'opel',name:'Opel',icon:'⚡',dealer:'Michael Attard (Attard)',addr:'Triq L-Imdina, Attard',hours:'Пн–Пт 8–18, Сб 9–13',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8928527,14.4513759&travelmode=driving',modelIds:['frontera','corsa']},
   {id:'cupra',name:'Cupra',icon:'🏎️',dealer:'Continental Cars (Msida)',addr:'Testaferrata St, Ta\'Xbiex',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8991116,14.4914245&travelmode=driving',modelIds:['raval','born']},
   {id:'citroen',name:'Citroën',icon:'🔶',dealer:'Michael Attard (Attard)',addr:'Triq L-Imdina, Attard',hours:'Пн–Пт 9–18, Сб 9–13',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8930582,14.4513159&travelmode=driving',modelIds:['ec3']},
   {id:'peugeot',name:'Peugeot',icon:'🔶',dealer:'Michael Attard (Ħamrun)',addr:'Triq Nazzjonali, Ħamrun',hours:'Пн–Пт 8–18, Сб 8–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8889056,14.498630&travelmode=driving',modelIds:['e208','e2008','e308']},
-  {id:'nissan',name:'Nissan',icon:'🔴',dealer:'Motor Sales (Blata l-Bajda)',addr:'National Road, Blata l-Bajda',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8882869,14.497758&travelmode=driving',modelIds:['leaf','ariya','leaf26']},
+  {id:'nissan',name:'Nissan',icon:'🔴',dealer:'Motor Sales (Blata l-Bajda)',addr:'National Road, Blata l-Bajda',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8882869,14.497758&travelmode=driving',modelIds:['leaf','ariya','leaf26','micra_ev']},
   {id:'fiat',name:'Fiat',icon:'🟡',dealer:'Fiat/Alfa/Jeep (Qormi)',addr:'Mdina Rd, Qormi',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8753276,14.4620695&travelmode=driving',modelIds:['fiat500']},
   {id:'honda',name:'Honda',icon:'🔴',dealer:'GasanZammit (Birkirkara)',addr:'Mriehel Bypass, Birkirkara',hours:'Пн–Пт 9–18, Сб 9–11:45',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8914247,14.4580001&travelmode=driving',modelIds:['eny1']},
   {id:'vw',name:'Volkswagen',icon:'⭕',dealer:'Continental Cars (Msida)',addr:'Testaferrata St, Ta\'Xbiex',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8991116,14.4914245&travelmode=driving',modelIds:['id3','id4']},
@@ -667,6 +667,34 @@ const BUILTIN_MODELS = [
     trims:[
       {id:'enyaq_60',name:'60 (170 к.с.)',battery:'63 кВт·год',range:'395 км',power:'170 к.с.',accel:'8.1 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'145 кВт',dcTime:'~25 хв',price:'~€40K',warranty:'3 р / 100 000 км'},
       {id:'enyaq_85',name:'85 (286 к.с.)',battery:'82 кВт·год',range:'560 км',power:'286 к.с.',accel:'6.7 с',topSpeed:'180 км/год',acKw:'11 кВт',dcKw:'175 кВт',dcTime:'~28 хв',price:'~€46K',warranty:'3 р / 100 000 км'}
+    ]
+  },
+  // ─── KIA (Qormi) — DODATKOVI ──────────────────────────────────────
+  {
+    id:'niro_ev',name:'Kia Niro EV',icon:'⚡',brand:'kia',
+    photos:[],
+    shared:{len:'4.42 м',width:'1.83 м',height:'1.57 м',trunk:'475 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS'},
+    trims:[
+      {id:'niro_ev_std',name:'Wind 64.8kWh',battery:'64.8 кВт·год',range:'460 км',power:'204 к.с.',accel:'7.8 с',topSpeed:'167 км/год',acKw:'11 кВт',dcKw:'80 кВт',dcTime:'~43 хв',price:'~€38K',warranty:'7 р / 150 000 км'}
+    ]
+  },
+  {
+    id:'ev2',name:'Kia EV2',icon:'⚡',brand:'kia',
+    photos:[],
+    shared:{len:'4.06 м',width:'1.80 м',height:'1.58 м',trunk:'362 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS'},
+    trims:[
+      {id:'ev2_42',name:'Standard 42kWh',battery:'42.2 кВт·год',range:'317 км',power:'144 к.с.',accel:'9.5 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~30 хв',price:'~€27K',warranty:'7 р / 150 000 км'},
+      {id:'ev2_61',name:'Long Range 61kWh',battery:'61 кВт·год',range:'453 км',power:'136 к.с.',accel:'9.5 с',topSpeed:'160 км/год',acKw:'22 кВт',dcKw:'118 кВт',dcTime:'~30 хв',price:'~€33K',warranty:'7 р / 150 000 км'}
+    ]
+  },
+  // ─── NISSAN (Blata l-Bajda) — DODATKOVI ──────────────────────────
+  {
+    id:'micra_ev',name:'Nissan Micra EV',icon:'🔴',brand:'nissan',
+    photos:[],
+    shared:{len:'3.95 м',width:'1.78 м',height:'1.50 м',trunk:'326 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS'},
+    trims:[
+      {id:'micra_40',name:'Standard 40kWh',battery:'40 кВт·год',range:'317 км',power:'121 к.с.',accel:'9.0 с',topSpeed:'150 км/год',acKw:'7 кВт',dcKw:'80 кВт',dcTime:'~30 хв',price:'~€27K',warranty:'5 р / 100 000 км'},
+      {id:'micra_52',name:'Extended 52kWh',battery:'52 кВт·год',range:'416 км',power:'150 к.с.',accel:'8.0 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~30 хв',price:'~€30K',warranty:'5 р / 100 000 км'}
     ]
   },
 ];
@@ -991,20 +1019,18 @@ async function openBrandView(brandId){
   document.getElementById('fsBrandName').textContent=`${brand.icon} ${brand.name}`;
   document.getElementById('fsBrandDealer').textContent=brand.dealer;
 
-  // Header right: hours + route
+  // Header right: status + hours + route
   document.getElementById('fsBrandHeaderRight').innerHTML=`
+    <select class="field-select" style="width:auto;min-width:100px;font-size:11px;padding:3px 6px" onchange="setBrandStatusAuto(this.value)">
+      ${BRAND_STATUSES.map(s=>`<option value="${s.value}" ${bd.status===s.value?'selected':''}>${s.label}</option>`).join('')}
+    </select>
     <span style="font-size:11px;color:var(--text3);white-space:nowrap">🕐 ${brand.hours}</span>
     <a href="${brand.mapsUrl}" target="_blank" style="font-size:11px;color:white;text-decoration:none;background:var(--accent);padding:4px 10px;border-radius:4px;white-space:nowrap">🧭 Маршрут</a>
   `;
 
-  // Controls: status + note
+  // Controls: label + note
   document.getElementById('fsBrandControls').innerHTML=`
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-      <div class="field-label" style="margin:0">Про бренд</div>
-      <select class="field-select" style="width:auto;min-width:110px" onchange="setBrandStatusAuto(this.value)">
-        ${BRAND_STATUSES.map(s=>`<option value="${s.value}" ${bd.status===s.value?'selected':''}>${s.label}</option>`).join('')}
-      </select>
-    </div>
+    <div class="field-label" style="margin-bottom:6px">Про бренд</div>
     <textarea class="brand-note-input" rows="2" placeholder="Нотатки про бренд..." onchange="setBrandNoteAuto('${brandId}',this.value)">${bd.note||''}</textarea>
 `;
 
