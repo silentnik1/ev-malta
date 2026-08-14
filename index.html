@@ -11,14 +11,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
-:root{--bg:#EFECE7;--surface:#F6F4F0;--surface2:#E1DDD7;--border:#D0D8DA;--accent:#738488;--accent2:#5f8a6a;--warn:#b8862f;--danger:#b5534a;--text:#2e3638;--text2:#5a6668;--text3:#8a9698}
+:root{--bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;--accent:#00d4aa;--accent2:#39d98a;--warn:#d4a84a;--danger:#da5a50;--text:#e6edf3;--text2:#8b949e;--text3:#6e7681}
+[data-theme="light"]{--bg:#EFECE7;--surface:#F6F4F0;--surface2:#E1DDD7;--border:#D0D8DA;--accent:#738488;--accent2:#5f8a6a;--warn:#b8862f;--danger:#b5534a;--text:#2e3638;--text2:#5a6668;--text3:#8a9698}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .logo{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--text)}.logo span{color:var(--accent)}
-.auth-btn{display:flex;align-items:center;gap:8px;background:var(--accent);color:white;border:none;padding:8px 14px;border-radius:4px;font-size:13px;font-weight:500;cursor:pointer;transition:opacity .2s}
+.auth-btn{display:flex;align-items:center;gap:5px;background:var(--accent);color:var(--bg);border:none;padding:5px 10px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;transition:opacity .2s;white-space:nowrap}
 .auth-btn:hover{opacity:.85}.auth-btn.connected{background:var(--accent2)}
-.tabs{display:flex;gap:2px;padding:16px 20px 0;border-bottom:1px solid var(--border);background:var(--surface);overflow-x:auto}
+.theme-toggle{background:none;border:1px solid var(--border);color:var(--text2);width:30px;height:30px;border-radius:4px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.theme-toggle:hover{border-color:var(--accent);color:var(--text)}
+.tabs{display:flex;gap:2px;padding:16px 20px 0;border-bottom:1px solid var(--border);background:var(--surface);overflow-x:auto;justify-content:center}
 .tab{padding:9px 14px;font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;transition:all .15s;white-space:nowrap}
 .tab:hover{color:var(--text2)}.tab.active{background:var(--bg);color:var(--text);border-color:var(--border)}
 .main{padding:20px;max-width:900px;margin:0 auto}
@@ -28,10 +31,11 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 .brand-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
 @media(min-width:700px){.brand-tiles{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.brand-tiles{grid-template-columns:repeat(4,1fr)}}
-.brand-tile{background:#fff;border:1px solid var(--border);border-radius:6px;padding:0;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.brand-tile{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;position:relative;overflow:hidden}
 .brand-tile:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px rgba(59,130,246,.15)}
 .brand-monogram{width:72px;height:72px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700}
-.brand-logo-box{width:100%;height:110px;display:flex;align-items:center;justify-content:center;background:#fff;padding:18px}
+.brand-logo-box{width:100%;height:110px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.95);padding:18px}
+[data-theme="light"] .brand-logo-box{background:#fff}
 .brand-logo-box img{max-width:100%;max-height:100%;object-fit:contain;display:block}
 
 
@@ -42,7 +46,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 /* FULLSCREEN BRAND VIEW */
 .brand-fullscreen{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto}
 .brand-fullscreen.open{display:block}
-.brand-fs-header{position:sticky;top:0;background:linear-gradient(135deg,#F6F4F0,#E1DDD7);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;z-index:10}
+.brand-fs-header{position:sticky;top:0;background:var(--surface2);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;z-index:10}
 .brand-fs-back{background:rgba(115,132,136,.15);color:var(--text);border:none;width:36px;height:36px;border-radius:4px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .brand-fs-back:hover{background:rgba(255,255,255,.2)}
 .brand-fs-title{flex:1;min-width:0}
@@ -55,8 +59,8 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 
 /* BRAND GROUP */
 .brand-group{margin-bottom:14px}
-.brand-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:linear-gradient(135deg,#F6F4F0,#E1DDD7);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:5px;cursor:pointer;gap:10px;transition:all .2s}
-.brand-header:hover{border-color:var(--accent);background:linear-gradient(135deg,#E1DDD7,#D0D8DA)}
+.brand-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:5px;cursor:pointer;gap:10px;transition:all .2s}
+.brand-header:hover{border-color:var(--accent);background:var(--surface)}
 .brand-header.open{border-radius:5px 10px 0 0;border-bottom:none}
 .brand-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
 .brand-icon{width:36px;height:36px;border-radius:4px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
@@ -106,10 +110,14 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 /* STATUS */
 .status-badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:3px;white-space:nowrap;letter-spacing:.2px}
 .status-none{background:var(--surface2);color:var(--text3)}
-.status-interest{background:#dde6ec;color:#4a7290}
-.status-visited{background:#dde8e0;color:#4a7256}
-.status-offer{background:#efe4d2;color:#8a6a3a}
-.status-skip{background:#ecdcd8;color:#a05850}
+.status-interest{background:rgba(74,114,144,.2);color:#6aaddb}
+.status-visited{background:rgba(74,114,86,.2);color:#6adb8a}
+.status-offer{background:rgba(212,168,74,.2);color:#d4a84a}
+.status-skip{background:rgba(218,90,80,.2);color:#da5a50}
+[data-theme="light"] .status-interest{background:#dde6ec;color:#4a7290}
+[data-theme="light"] .status-visited{background:#dde8e0;color:#4a7256}
+[data-theme="light"] .status-offer{background:#efe4d2;color:#8a6a3a}
+[data-theme="light"] .status-skip{background:#ecdcd8;color:#a05850}
 .model-status-select{font-size:11px;font-weight:500;padding:3px 8px;border-radius:3px;border:none;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:.2px;max-width:120px}
 .model-status-select:focus{outline:1px solid var(--accent)}
 
@@ -214,8 +222,8 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 /* MAP */
 .map-wrap{border-radius:5px;overflow:hidden;border:1px solid var(--border);height:460px}
 #leaflet-map{width:100%;height:100%}
-.leaflet-popup-content-wrapper{background:#F6F4F0;color:#2e3638;border:1px solid #D0D8DA;border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
-.leaflet-popup-tip{background:#F6F4F0}
+.leaflet-popup-content-wrapper{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.leaflet-popup-tip{background:var(--surface)}
 .leaflet-popup-content{font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;margin:10px 14px}
 .popup-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:4px;color:#2e3638}
 .popup-brands{color:#738488;font-size:12px;margin-bottom:3px}
@@ -252,12 +260,10 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 </div>
 <header>
   <div class="logo">EV<span>•</span>Malta</div>
-  <div style="display:flex;align-items:center;gap:8px">
-    <span class="drive-status" id="driveStatus">Google Drive</span>
-    <button class="auth-btn" id="authBtn" onclick="handleAuth()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Підключити Drive
-    </button>
+  <div style="display:flex;align-items:center;gap:6px">
+    <span class="drive-status" id="driveStatus">gDrive</span>
+    <button class="auth-btn" id="authBtn" onclick="handleAuth()">Connect</button>
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Тема">🌙</button>
   </div>
 </header>
 <div class="tabs">
@@ -743,6 +749,30 @@ function buildModels(){
   models = [...BUILTIN_MODELS, ...customModels];
 }
 
+// ─── THEME ────────────────────────────────────────────────────────
+function toggleTheme(){
+  const html=document.documentElement;
+  const isDark=!html.hasAttribute('data-theme');
+  html.setAttribute('data-theme', isDark?'light':'');
+  if(isDark) html.removeAttribute('data-theme');
+  else html.setAttribute('data-theme','light');
+  localStorage.setItem('ev_theme', isDark?'light':'dark');
+  updateThemeBtn();
+}
+function updateThemeBtn(){
+  const btn=document.getElementById('themeBtn');
+  if(!btn)return;
+  const isLight=document.documentElement.getAttribute('data-theme')==='light';
+  btn.textContent=isLight?'🌙':'☀️';
+  btn.title=isLight?'Темна тема':'Світла тема';
+}
+function initTheme(){
+  const saved=localStorage.getItem('ev_theme');
+  if(saved==='light') document.documentElement.setAttribute('data-theme','light');
+  updateThemeBtn();
+}
+initTheme();
+
 // ─── STORAGE ──────────────────────────────────────────────────────────
 function saveLocal(){
   localStorage.setItem('ev_malta2_userData', JSON.stringify(userData));
@@ -784,9 +814,9 @@ function checkOAuthCallback(){
   }
 }
 function setDriveUI(ok){
-  document.getElementById('authBtn').textContent=ok?'✓ Drive підключено':'Підключити Drive';
+  document.getElementById('authBtn').textContent=ok?'✓ Synced':'Connect';
   document.getElementById('authBtn').classList.toggle('connected',ok);
-  const s=document.getElementById('driveStatus');s.textContent=ok?'Синхронізовано':'Google Drive';s.className='drive-status'+(ok?' ok':'');
+  const s=document.getElementById('driveStatus');s.textContent=ok?'gDrive ✓':'gDrive';s.className='drive-status'+(ok?' ok':'');
 }
 let tokenExpiredFlag=false;
 function handleTokenExpired(){
@@ -796,11 +826,11 @@ function handleTokenExpired(){
   drivePhotoCache={};
   localStorage.removeItem('ev_token');localStorage.removeItem('ev_token_exp');
   const btn=document.getElementById('authBtn');
-  btn.textContent='🔄 Оновити підключення';
+  btn.textContent='🔄 Reconnect';
   btn.classList.remove('connected');
   btn.style.background='var(--warn)';
   const s=document.getElementById('driveStatus');
-  s.textContent='Підключення застаріло';s.className='drive-status error';
+  s.textContent='Expired';s.className='drive-status error';
 }
 function signOut(){accessToken=null;driveFileId=null;localStorage.removeItem('ev_token');localStorage.removeItem('ev_token_exp');setDriveUI(false);}
 async function saveToDrive(){
@@ -819,7 +849,7 @@ async function saveToDrive(){
       driveFileId=(await r.json()).id;
     }
     saveLocal();
-    const s=document.getElementById('driveStatus');s.textContent='Збережено';s.className='drive-status ok';
+    const s=document.getElementById('driveStatus');s.textContent='Saved ✓';s.className='drive-status ok';
     setTimeout(()=>{s.textContent='Синхронізовано';},1500);
   }catch(e){saveLocal();}
 }
