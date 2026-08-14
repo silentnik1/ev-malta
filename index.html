@@ -408,7 +408,7 @@ const BRANDS = [
 ];
 
 const BRAND_LOGOS={'hyundai':'hyundai','kia':'kia','renault':'renault','opel':'opel','cupra':'cupra','citroen':'citroen','peugeot':'peugeot','nissan':'nissan','fiat':'fiat','honda':'honda','vw':'volkswagen'};
-const LOGO_CDN='https://cdn.jsdelivr.net/gh/filippofilip95/car-logos-dataset@master/logos/optimized/';
+const LOGO_CDN='https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/';
 const BRAND_COLORS={'hyundai':{bg:'#002c5f',fg:'#fff'},'kia':{bg:'#05141f',fg:'#fff'},'renault':{bg:'#efdf00',fg:'#000'},'opel':{bg:'#f7ff14',fg:'#000'},'cupra':{bg:'#94714f',fg:'#fff'},'citroen':{bg:'#6e6e6e',fg:'#fff'},'peugeot':{bg:'#1b1b3a',fg:'#fff'},'nissan':{bg:'#c3002f',fg:'#fff'},'fiat':{bg:'#8a1538',fg:'#fff'},'honda':{bg:'#cc0000',fg:'#fff'},'vw':{bg:'#001e50',fg:'#fff'}};
 
 const BRAND_STATUSES = [
@@ -827,7 +827,7 @@ function renderCars(){
     const monogram=brand.name.charAt(0).toUpperCase();
     const logoSlug=BRAND_LOGOS[brand.id];
     const logoHtml=logoSlug
-      ?`<div class="brand-logo-box"><img src="${LOGO_CDN}${logoSlug}.png" alt="${brand.name}" data-mono="${monogram}" data-bg="${col.bg}" data-fg="${col.fg}" onerror="logoFallback(this)"></div>`
+      ?`<div class="brand-logo-box"><img src="${LOGO_CDN}${logoSlug}.png" alt="${brand.name}" data-slug="${logoSlug}" data-mono="${monogram}" data-bg="${col.bg}" data-fg="${col.fg}" onerror="logoFallback(this)"></div>`
       :`<div class="brand-monogram" style="background:${col.bg};color:${col.fg}">${monogram}</div>`;
     const minP=brandMinPrice(brandModels);
     tile.innerHTML=`
@@ -1071,10 +1071,12 @@ function renderChargingTimes(model){
 }
 
 function logoFallback(img){
+  if(!img.dataset.triedJsdelivr&&img.dataset.slug){
+    img.dataset.triedJsdelivr='1';
+    img.src='https://cdn.jsdelivr.net/gh/filippofilip95/car-logos-dataset@master/logos/optimized/'+img.dataset.slug+'.png';
+    return;
+  }
   const box=img.parentElement;
-  box.style.background='transparent';
-  box.style.boxShadow='none';
-  box.style.padding='0';
   box.innerHTML=`<div class="brand-monogram" style="background:${img.dataset.bg};color:${img.dataset.fg}">${img.dataset.mono}</div>`;
 }
 
