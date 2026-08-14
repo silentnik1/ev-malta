@@ -48,6 +48,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 .brand-fs-title{flex:1;min-width:0}
 .brand-fs-name{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700}
 .brand-fs-dealer{font-size:12px;color:var(--text3)}
+.brand-fs-header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .brand-fs-body{padding:16px 20px;max-width:900px;margin:0 auto}
 .brand-fs-controls{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px}
 .brand-fs-info-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -294,6 +295,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
       <div class="brand-fs-name" id="fsBrandName"></div>
       <div class="brand-fs-dealer" id="fsBrandDealer"></div>
     </div>
+    <div class="brand-fs-header-right" id="fsBrandHeaderRight"></div>
   </div>
   <div class="brand-fs-body">
     <div class="brand-fs-controls" id="fsBrandControls"></div>
@@ -989,18 +991,21 @@ async function openBrandView(brandId){
   document.getElementById('fsBrandName').textContent=`${brand.icon} ${brand.name}`;
   document.getElementById('fsBrandDealer').textContent=brand.dealer;
 
+  // Header right: hours + route
+  document.getElementById('fsBrandHeaderRight').innerHTML=`
+    <span style="font-size:11px;color:var(--text3);white-space:nowrap">🕐 ${brand.hours}</span>
+    <a href="${brand.mapsUrl}" target="_blank" style="font-size:11px;color:white;text-decoration:none;background:var(--accent);padding:4px 10px;border-radius:4px;white-space:nowrap">🧭 Маршрут</a>
+  `;
 
-  // Controls: status, maps, hours, note
+  // Controls: status + note
   document.getElementById('fsBrandControls').innerHTML=`
-    <div class="field-label" style="margin-bottom:8px">Про салон</div>
-    <div class="brand-fs-info-row" style="margin-bottom:8px">
-      <span class="brand-hours">🕐 ${brand.hours}</span>
-      <a href="${brand.mapsUrl}" target="_blank" style="font-size:12px;color:white;text-decoration:none;background:var(--accent);padding:5px 12px;border-radius:4px">🧭 Маршрут</a>
-      <select class="field-select" style="width:auto;flex:1;min-width:110px" onchange="setBrandStatusAuto(this.value)">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <div class="field-label" style="margin:0">Про бренд</div>
+      <select class="field-select" style="width:auto;min-width:110px" onchange="setBrandStatusAuto(this.value)">
         ${BRAND_STATUSES.map(s=>`<option value="${s.value}" ${bd.status===s.value?'selected':''}>${s.label}</option>`).join('')}
       </select>
     </div>
-    <textarea class="brand-note-input" rows="2" placeholder="Нотатки про салон..." onchange="setBrandNoteAuto('${brandId}',this.value)">${bd.note||''}</textarea>
+    <textarea class="brand-note-input" rows="2" placeholder="Нотатки про бренд..." onchange="setBrandNoteAuto('${brandId}',this.value)">${bd.note||''}</textarea>
 `;
 
   // Models
@@ -1295,7 +1300,7 @@ function renderModelBlock(model,container){
 
     block.innerHTML=`
       <div class="model-card">
-        <div class="model-header" onclick="if(!event.target.closest('select,button,a,input'))toggleModel('${model.id}')">
+        <div class="model-header" onclick="if(!event.target.closest('select,a,input') || event.target.closest('.expand-btn'))toggleModel('${model.id}')">
           <div class="model-left">
             <div class="model-icon">${model.icon||'🚗'}</div>
             <div>
