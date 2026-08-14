@@ -11,8 +11,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
-:root{--bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;--accent:#00d4aa;--accent2:#39d98a;--warn:#d4a84a;--danger:#da5a50;--text:#e6edf3;--text2:#8b949e;--text3:#6e7681}
-[data-theme="light"]{--bg:#EFECE7;--surface:#F6F4F0;--surface2:#E1DDD7;--border:#D0D8DA;--accent:#738488;--accent2:#5f8a6a;--warn:#b8862f;--danger:#b5534a;--text:#2e3638;--text2:#5a6668;--text3:#8a9698}
+:root{--bg:#0f1923;--surface:#172331;--surface2:#1e2d3d;--border:#2a3f52;--accent:#4fc3f7;--accent2:#66bb6a;--warn:#ffb74d;--danger:#ef5350;--text:#e1e8ed;--text2:#8899a6;--text3:#5c6f7e}
+[data-theme="light"]{--bg:#EFECE7;--surface:#F6F4F0;--surface2:#E1DDD7;--border:#D0D8DA;--accent:#4a7a8a;--accent2:#5f8a6a;--warn:#b8862f;--danger:#b5534a;--text:#2e3638;--text2:#5a6668;--text3:#8a9698}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
@@ -225,9 +225,9 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 .leaflet-popup-content-wrapper{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
 .leaflet-popup-tip{background:var(--surface)}
 .leaflet-popup-content{font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;margin:10px 14px}
-.popup-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:4px;color:#2e3638}
-.popup-brands{color:#738488;font-size:12px;margin-bottom:3px}
-.popup-hours{color:#8a9698;font-size:11px}
+.popup-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:4px;color:var(--text)}
+.popup-brands{color:var(--accent);font-size:12px;margin-bottom:3px}
+.popup-hours{color:var(--text3);font-size:11px}
 .dealers-list{margin-top:14px;display:grid;gap:8px}
 .dealer-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px}
 .dealer-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);margin-top:4px;flex-shrink:0}
@@ -267,10 +267,10 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
   </div>
 </header>
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('cars',this)">🚗 Авто</div>
-  <div class="tab" onclick="switchTab('compare',this)">⚖️ Порівняння</div>
-  <div class="tab" onclick="switchTab('map',this)">📍 Салони</div>
-  <div class="tab" onclick="switchTab('summary',this)">📊 Підсумок</div>
+  <div class="tab active" onclick="switchTab('cars',this)">Авто</div>
+  <div class="tab" onclick="switchTab('compare',this)">Порівняння</div>
+  <div class="tab" onclick="switchTab('map',this)">Салони</div>
+  <div class="tab" onclick="switchTab('summary',this)">Підсумок</div>
 </div>
 <div class="main">
   <div class="panel active" id="panel-cars">
@@ -310,7 +310,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 </div>
 
 <!-- FAB -->
-<button class="add-model-fab" id="fabBtn" onclick="openAddModel()">➕ Додати авто</button>
+<button class="add-model-fab" id="fabBtn" onclick="openAddModel()">+ Додати авто</button>
 
 <!-- ADD/EDIT MODEL MODAL -->
 <div class="modal-overlay" id="modelModal">
@@ -752,18 +752,21 @@ function buildModels(){
 // ─── THEME ────────────────────────────────────────────────────────
 function toggleTheme(){
   const html=document.documentElement;
-  const isDark=!html.hasAttribute('data-theme');
-  html.setAttribute('data-theme', isDark?'light':'');
-  if(isDark) html.removeAttribute('data-theme');
-  else html.setAttribute('data-theme','light');
-  localStorage.setItem('ev_theme', isDark?'light':'dark');
+  const isCurrentlyLight=html.getAttribute('data-theme')==='light';
+  if(isCurrentlyLight){
+    html.removeAttribute('data-theme');
+    localStorage.setItem('ev_theme','dark');
+  }else{
+    html.setAttribute('data-theme','light');
+    localStorage.setItem('ev_theme','light');
+  }
   updateThemeBtn();
 }
 function updateThemeBtn(){
   const btn=document.getElementById('themeBtn');
   if(!btn)return;
   const isLight=document.documentElement.getAttribute('data-theme')==='light';
-  btn.textContent=isLight?'🌙':'☀️';
+  btn.textContent=isLight?'◗':'◑';
   btn.title=isLight?'Темна тема':'Світла тема';
 }
 function initTheme(){
@@ -1025,7 +1028,7 @@ function renderCars(){
     tile.className='brand-tile';
     tile.onclick=()=>openCustomView();
     tile.innerHTML=`
-      <div class="brand-tile-icon">➕</div>
+      <div class="brand-tile-icon">+</div>
       <div>
         <div class="brand-tile-name">Інші</div>
         <div class="brand-tile-dealer">Додані вручну</div>
@@ -1054,8 +1057,8 @@ async function openBrandView(brandId){
     <select class="field-select" style="width:auto;min-width:100px;font-size:11px;padding:3px 6px" onchange="setBrandStatusAuto(this.value)">
       ${BRAND_STATUSES.map(s=>`<option value="${s.value}" ${bd.status===s.value?'selected':''}>${s.label}</option>`).join('')}
     </select>
-    <span style="font-size:11px;color:var(--text3);white-space:nowrap">🕐 ${brand.hours}</span>
-    <a href="${brand.mapsUrl}" target="_blank" style="font-size:11px;color:white;text-decoration:none;background:var(--accent);padding:4px 10px;border-radius:4px;white-space:nowrap">🧭 Маршрут</a>
+    <span style="font-size:11px;color:var(--text3);white-space:nowrap">${brand.hours}</span>
+    <a href="${brand.mapsUrl}" target="_blank" style="font-size:11px;color:white;text-decoration:none;background:var(--accent);padding:4px 10px;border-radius:4px;white-space:nowrap">Маршрут →</a>
   `;
 
   // Controls: label + note
@@ -1085,7 +1088,7 @@ async function openBrandView(brandId){
 function openCustomView(){
   const brandedIds=BRANDS.flatMap(b=>b.modelIds);
   const unbranded=models.filter(m=>!brandedIds.includes(m.id)&&!BUILTIN_MODELS.find(b=>b.id===m.id));
-  document.getElementById('fsBrandName').textContent='➕ Інші авто';
+  document.getElementById('fsBrandName').textContent='+ Інші авто';
   document.getElementById('fsBrandDealer').textContent='Додані вручну';
   document.getElementById('fsBrandControls').innerHTML='';
   const container=document.getElementById('fsBrandModels');
@@ -1241,9 +1244,9 @@ function renderChargingTimes(model){
     return `<tr>
       <td colspan="2" style="padding-top:8px;font-weight:600;color:var(--text2);font-size:11px">${t.name} (${batt} кВт·год)</td>
     </tr>
-    <tr><td>🏠 Розетка 2.3 кВт</td><td>${fmtHours(homeH)}</td></tr>
-    <tr><td>🔌 AC ${acKw} кВт</td><td>${fmtHours(acH)}</td></tr>
-    <tr><td>⚡ DC ${parseKw(t.dcKw)||'?'} кВт (10–80%)</td><td>${dcStr}</td></tr>`;
+    <tr><td>Розетка 2.3 кВт</td><td>${fmtHours(homeH)}</td></tr>
+    <tr><td>AC ${acKw} кВт</td><td>${fmtHours(acH)}</td></tr>
+    <tr><td>DC ${parseKw(t.dcKw)||'?'} кВт (10–80%)</td><td>${dcStr}</td></tr>`;
   }).filter(Boolean).join('');
   if(!rows)return '';
   return `<div style="margin-top:10px"><div class="field-label" style="margin-bottom:6px">Час зарядки по типах</div><table class="specs-table">${rows}</table></div>`;
@@ -1317,10 +1320,10 @@ function renderModelBlock(model,container){
     const sharedHtml=`
       <div>
         <div class="specs-tabs">
-          <div class="specs-tab active" id="mstab-${model.id}-prices" onclick="mSwitchSpecs('${model.id}','prices')">💰 Ціни</div>
-          <div class="specs-tab" id="mstab-${model.id}-dim" onclick="mSwitchSpecs('${model.id}','dim')">📐 Габарити</div>
-          <div class="specs-tab" id="mstab-${model.id}-charge" onclick="mSwitchSpecs('${model.id}','charge')">🔌 Зарядка</div>
-          <div class="specs-tab" id="mstab-${model.id}-ncap" onclick="mSwitchSpecs('${model.id}','ncap')">⭐ Безпека</div>
+          <div class="specs-tab active" id="mstab-${model.id}-prices" onclick="mSwitchSpecs('${model.id}','prices')">Ціни</div>
+          <div class="specs-tab" id="mstab-${model.id}-dim" onclick="mSwitchSpecs('${model.id}','dim')">Габарити</div>
+          <div class="specs-tab" id="mstab-${model.id}-charge" onclick="mSwitchSpecs('${model.id}','charge')">Зарядка</div>
+          <div class="specs-tab" id="mstab-${model.id}-ncap" onclick="mSwitchSpecs('${model.id}','ncap')">Безпека</div>
         </div>
         <div class="specs-panel active" id="mspanel-${model.id}-prices">
           ${renderPricesTable(model)}
@@ -1377,7 +1380,7 @@ function renderModelBlock(model,container){
           ${gallHtml}
           ${accessToken?`<div style="display:flex;align-items:center;gap:8px;margin-top:-4px">
             <label style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:5px">
-              📤 Завантажити фото
+              ↑ Завантажити фото
               <input type="file" accept="image/*" multiple style="display:none" onchange="uploadModelPhoto('${model.id}',Array.from(this.files))">
             </label>
             <span style="font-size:11px;color:var(--text3)" id="photoup-${model.id}"></span>
@@ -1387,7 +1390,7 @@ function renderModelBlock(model,container){
       </div>
       <div class="trims-section" id="trims-${model.id}" style="${openModels[model.id]?'':'display:none'}">
         ${trimsHtml}
-<button class="add-trim-btn" onclick="openAddTrim('${model.id}')">➕ Додати комплектацію</button>
+<button class="add-trim-btn" onclick="openAddTrim('${model.id}')">+ Додати комплектацію</button>
       </div>`;
   container.appendChild(block);
 }
@@ -1424,11 +1427,11 @@ function renderTrim(model,trim){
         <textarea class="field-textarea" placeholder="Враження, деталі комплектації, питання..." onchange="setTrimNotesAuto('${trim.id}',this.value)">${d.notes||''}</textarea>
       </div>
       <details class="docs-collapse">
-        <summary>📎 Документи / Оффер${(d.files||[]).length?` (${d.files.length})`:''}</summary>
+        <summary>Документи / Оффер${(d.files||[]).length?` (${d.files.length})`:''}</summary>
         <div style="margin-top:8px">
           <label class="file-drop" ondragover="dragOver(event,'${trim.id}')" ondragleave="dragLeave(event,'${trim.id}')" ondrop="dropFile(event,'${trim.id}')">
             <input type="file" id="file-${trim.id}" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple onchange="handleFileInput('${trim.id}')">
-            <div>📎 <span style="color:var(--accent);cursor:pointer" onclick="document.getElementById('file-${trim.id}').click()">Обери файл</span> або перетягни</div>
+            <div>↑ <span style="color:var(--accent);cursor:pointer" onclick="document.getElementById('file-${trim.id}').click()">Обери файл</span> або перетягни</div>
           </label>
           <div class="files-list" id="files-${trim.id}">${filesHtml}</div>
         </div>
@@ -1737,15 +1740,15 @@ function initMap(){
     iconCreateFunction:c=>L.divIcon({html:`<div style="background:#738488;color:white;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,.4)">${c.getChildCount()}</div>`,iconSize:[34,34],iconAnchor:[17,17],className:''})
   });
   DEALERS.forEach(d=>{
-    cluster.addLayer(L.marker([d.lat,d.lng],{icon}).bindPopup(`<div class="popup-name">${d.name}</div><div class="popup-brands">${d.brands}</div><div class="popup-hours" style="white-space:pre-line;line-height:1.8;margin-top:4px">🕐 ${d.hoursLong}</div><a href="https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}&travelmode=driving" target="_blank" style="display:inline-block;margin-top:8px;background:#738488;color:white;text-decoration:none;padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500">🧭 Маршрут</a>`,{maxWidth:240}));
+    cluster.addLayer(L.marker([d.lat,d.lng],{icon}).bindPopup(`<div class="popup-name">${d.name}</div><div class="popup-brands">${d.brands}</div><div class="popup-hours" style="white-space:pre-line;line-height:1.8;margin-top:4px">${d.hoursLong}</div><a href="https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}&travelmode=driving" target="_blank" style="display:inline-block;margin-top:8px;background:#738488;color:white;text-decoration:none;padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500">Маршрут →</a>`,{maxWidth:240}));
   });
   cluster.on('clusterclick',e=>{
     const markers=e.layer.getAllChildMarkers();
-    const items=markers.map(m=>{const d=DEALERS.find(d=>d.lat===m.getLatLng().lat&&d.lng===m.getLatLng().lng);if(!d)return'';return`<div style="padding:6px 0;border-bottom:1px solid #D0D8DA"><div style="font-weight:600;font-size:13px;color:#2e3638">${d.name}</div><div style="font-size:11px;color:#738488;margin:2px 0">${d.brands}</div><div style="font-size:11px;color:#8a9698">🕐 ${d.hoursShort}</div><a href="https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}&travelmode=driving" target="_blank" style="display:inline-block;margin-top:4px;background:#738488;color:white;text-decoration:none;padding:3px 10px;border-radius:5px;font-size:11px">🧭 Маршрут</a></div>`;}).join('');
+    const items=markers.map(m=>{const d=DEALERS.find(d=>d.lat===m.getLatLng().lat&&d.lng===m.getLatLng().lng);if(!d)return'';return`<div style="padding:6px 0;border-bottom:1px solid #D0D8DA"><div style="font-weight:600;font-size:13px;color:#2e3638">${d.name}</div><div style="font-size:11px;color:#738488;margin:2px 0">${d.brands}</div><div style="font-size:11px;color:#8a9698">${d.hoursShort}</div><a href="https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}&travelmode=driving" target="_blank" style="display:inline-block;margin-top:4px;background:#738488;color:white;text-decoration:none;padding:3px 10px;border-radius:5px;font-size:11px">Маршрут →</a></div>`;}).join('');
     L.popup({maxWidth:260}).setLatLng(e.layer.getLatLng()).setContent(`<div style="font-family:'Inter',sans-serif"><div style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#2e3638;margin-bottom:6px">${markers.length} салони тут:</div><div style="max-height:260px;overflow-y:auto">${items}</div></div>`).openOn(leafletMap);
   });
   leafletMap.addLayer(cluster);
-  document.getElementById('dealersList').innerHTML=DEALERS.map(d=>`<div class="dealer-card"><div class="dealer-dot"></div><div><div class="dealer-name">${d.name}</div><div class="dealer-info">${d.addr} · ${d.hours}</div><div class="dealer-brands">${d.brands}</div><div style="display:flex;gap:8px;margin-top:6px"><a href="${d.maps}" target="_blank" style="font-size:11px;color:var(--accent2);text-decoration:none">Інфо ↗</a><a href="https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}&travelmode=driving" target="_blank" style="font-size:11px;color:white;text-decoration:none;background:var(--accent);padding:3px 9px;border-radius:5px">🧭 Маршрут</a></div></div></div>`).join('');
+  document.getElementById('dealersList').innerHTML=DEALERS.map(d=>`<div class="dealer-card"><div class="dealer-dot"></div><div><div class="dealer-name">${d.name}</div><div class="dealer-info">${d.addr} · ${d.hours}</div><div class="dealer-brands">${d.brands}</div><div style="display:flex;gap:8px;margin-top:6px"><a href="${d.maps}" target="_blank" style="font-size:11px;color:var(--accent2);text-decoration:none">Інфо ↗</a><a href="https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}&travelmode=driving" target="_blank" style="font-size:11px;color:white;text-decoration:none;background:var(--accent);padding:3px 9px;border-radius:5px">Маршрут →</a></div></div></div>`).join('');
 }
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
