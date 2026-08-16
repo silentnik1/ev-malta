@@ -422,11 +422,15 @@ const BRANDS = [
   {id:'vw',name:'Volkswagen',icon:'⭕',dealer:'Continental Cars (Msida)',addr:'Testaferrata St, Ta\'Xbiex',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8991116,14.4914245&travelmode=driving',modelIds:['id3','id4']},
   {id:'dacia',name:'Dacia',icon:'🌿',dealer:'Auto Sales (Lija)',addr:'Triq Il-Mosta, Lija',hours:'Пн–Вт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.9049324,14.4384579&travelmode=driving',modelIds:['spring']},
   {id:'skoda',name:'Škoda',icon:'💚',dealer:'Continental Cars (Msida)',addr:'Testaferrata St, Ta\'Xbiex',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8991116,14.4914245&travelmode=driving',modelIds:['elroq','enyaq']},
+  {id:'jeep',name:'Jeep',icon:'⭕',dealer:'Fiat/Alfa/Jeep (Qormi)',addr:'Mdina Rd, Qormi',hours:'Пн–Пт 9–18, Сб 9–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8753276,14.4620695&travelmode=driving',modelIds:['avenger']},
+  {id:'toyota',name:'Toyota',icon:'🔴',dealer:'GasanZammit (Birkirkara)',addr:'Mriehel Bypass, Birkirkara',hours:'Пн–Пт 9–18, Сб 9–11:45',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8914247,14.4580001&travelmode=driving',modelIds:['bz4x']},
+  {id:'ford',name:'Ford',icon:'🔵',dealer:'GasanZammit (Birkirkara)',addr:'Mriehel Bypass, Birkirkara',hours:'Пн–Пт 9–18, Сб 9–11:45',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8914247,14.4580001&travelmode=driving',modelIds:['puma_e','explorer_e']},
+  {id:'suzuki',name:'Suzuki',icon:'🟢',dealer:'Industrial Motors (Qormi)',addr:'Mdina Rd, Qormi',hours:'Пн–Пт 8:30–17:30, Сб 8:30–12',mapsUrl:'https://www.google.com/maps/dir/?api=1&destination=35.8753276,14.4620695&travelmode=driving',modelIds:['evitara']},
 ];
 
-const BRAND_LOGOS={'hyundai':'hyundai','kia':'kia','renault':'renault','opel':'opel','cupra':'cupra','citroen':'citroen','peugeot':'peugeot','nissan':'nissan','fiat':'fiat','honda':'honda','vw':'volkswagen','dacia':'dacia','skoda':'skoda'};
+const BRAND_LOGOS={'hyundai':'hyundai','kia':'kia','renault':'renault','opel':'opel','cupra':'cupra','citroen':'citroen','peugeot':'peugeot','nissan':'nissan','fiat':'fiat','honda':'honda','vw':'volkswagen','dacia':'dacia','skoda':'skoda','jeep':'jeep','toyota':'toyota','ford':'ford','suzuki':'suzuki'};
 const LOGO_CDN='https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/';
-const BRAND_COLORS={'hyundai':{bg:'#002c5f',fg:'#fff'},'kia':{bg:'#05141f',fg:'#fff'},'renault':{bg:'#efdf00',fg:'#000'},'opel':{bg:'#f7ff14',fg:'#000'},'cupra':{bg:'#94714f',fg:'#fff'},'citroen':{bg:'#6e6e6e',fg:'#fff'},'peugeot':{bg:'#1b1b3a',fg:'#fff'},'nissan':{bg:'#c3002f',fg:'#fff'},'fiat':{bg:'#8a1538',fg:'#fff'},'honda':{bg:'#cc0000',fg:'#fff'},'vw':{bg:'#001e50',fg:'#fff'},'dacia':{bg:'#646b52',fg:'#fff'},'skoda':{bg:'#4ba82e',fg:'#fff'}};
+const BRAND_COLORS={'hyundai':{bg:'#002c5f',fg:'#fff'},'kia':{bg:'#05141f',fg:'#fff'},'renault':{bg:'#efdf00',fg:'#000'},'opel':{bg:'#f7ff14',fg:'#000'},'cupra':{bg:'#94714f',fg:'#fff'},'citroen':{bg:'#6e6e6e',fg:'#fff'},'peugeot':{bg:'#1b1b3a',fg:'#fff'},'nissan':{bg:'#c3002f',fg:'#fff'},'fiat':{bg:'#8a1538',fg:'#fff'},'honda':{bg:'#cc0000',fg:'#fff'},'vw':{bg:'#001e50',fg:'#fff'},'dacia':{bg:'#646b52',fg:'#fff'},'skoda':{bg:'#4ba82e',fg:'#fff'},'jeep':{bg:'#1a1a1a',fg:'#fff'},'toyota':{bg:'#eb0a1e',fg:'#fff'},'ford':{bg:'#003499',fg:'#fff'},'suzuki':{bg:'#e63127',fg:'#fff'}};
 
 const BRAND_STATUSES = [
   {value:'none',label:'Не оцінено'},
@@ -701,6 +705,53 @@ const BUILTIN_MODELS = [
     trims:[
       {id:'micra_40',name:'Standard 40kWh',battery:'40 кВт·год',range:'317 км',power:'121 к.с.',accel:'9.0 с',topSpeed:'150 км/год',acKw:'7 кВт',dcKw:'80 кВт',dcTime:'~30 хв',price:'~€27K',warranty:'5 р / 100 000 км'},
       {id:'micra_52',name:'Extended 52kWh',battery:'52 кВт·год',range:'416 км',power:'150 к.с.',accel:'8.0 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~30 хв',price:'~€30K',warranty:'5 р / 100 000 км'}
+    ]
+  },
+  // ─── JEEP (Fiat/Alfa/Jeep, Qormi) ──────────────────────────────────
+  {
+    id:'avenger',name:'Jeep Avenger BEV',icon:'⭕',brand:'jeep',
+    photos:[],
+    shared:{len:'4.08 м',width:'1.78 м',height:'1.53 м',trunk:'355 л',seats:'5',ncap:'4 зірки (2023)',acPlug:'Type 2',dcPlug:'CCS',clearance:'190 мм'},
+    trims:[
+      {id:'avenger_std',name:'54kWh',battery:'54 кВт·год',range:'400 км',power:'156 к.с.',accel:'9.0 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~24 хв',price:'~€35–37K',warranty:'3 р / 100 000 км'}
+    ]
+  },
+  // ─── TOYOTA (GasanZammit, Birkirkara) ────────────────────────────
+  {
+    id:'bz4x',name:'Toyota bZ4X',icon:'🔴',brand:'toyota',
+    photos:[],
+    shared:{len:'4.69 м',width:'1.86 м',height:'1.65 м',trunk:'452 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS',clearance:'177 мм',note:'⚠️ >4.5м'},
+    trims:[
+      {id:'bz4x_58',name:'Icon 57.7kWh',battery:'57.7 кВт·год',range:'442 км',power:'204 к.с.',accel:'8.4 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'150 кВт',dcTime:'~28 хв',price:'~€38K (від €30,495 з грантом)',warranty:'5 р / необмежений'},
+      {id:'bz4x_73',name:'Design 73.1kWh',battery:'73.1 кВт·год',range:'567 км',power:'204 к.с.',accel:'8.4 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'150 кВт',dcTime:'~35 хв',price:'~€44K',warranty:'5 р / необмежений'}
+    ]
+  },
+  // ─── FORD (GasanZammit, Birkirkara) ──────────────────────────────
+  {
+    id:'puma_e',name:'Ford Puma Gen-E',icon:'🔵',brand:'ford',
+    photos:[],
+    shared:{len:'4.21 м',width:'1.79 м',height:'1.54 м',trunk:'574 л',seats:'5',ncap:'4 зірки (2022)',acPlug:'Type 2',dcPlug:'CCS',clearance:'~155 мм'},
+    trims:[
+      {id:'puma_e_std',name:'Titanium 43kWh',battery:'43 кВт·год',range:'376 км',power:'168 к.с.',accel:'8.0 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~23 хв',price:'~€37K',warranty:'3 р / 100 000 км'}
+    ]
+  },
+  {
+    id:'explorer_e',name:'Ford Explorer EV',icon:'🔵',brand:'ford',
+    photos:[],
+    shared:{len:'4.46 м',width:'1.87 м',height:'1.60 м',trunk:'470 л',seats:'5',ncap:'5 зірок (2023)',acPlug:'Type 2',dcPlug:'CCS',clearance:'141 мм'},
+    trims:[
+      {id:'explorer_55',name:'Standard Range 55kWh',battery:'55 кВт·год',range:'346 км',power:'170 к.с.',accel:'8.6 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'135 кВт',dcTime:'~25 хв',price:'~€40K',warranty:'3 р / 100 000 км'},
+      {id:'explorer_82',name:'Extended Range 82kWh',battery:'82 кВт·год',range:'522 км',power:'286 к.с.',accel:'6.7 с',topSpeed:'180 км/год',acKw:'11 кВт',dcKw:'175 кВт',dcTime:'~26 хв',price:'~€43K',warranty:'3 р / 100 000 км'}
+    ]
+  },
+  // ─── SUZUKI (Industrial Motors, Qormi) ───────────────────────────
+  {
+    id:'evitara',name:'Suzuki e-VITARA',icon:'🟢',brand:'suzuki',
+    photos:[],
+    shared:{len:'4.27 м',width:'1.80 м',height:'1.64 м',trunk:'238–562 л',seats:'5',ncap:'5 зірок (2025)',acPlug:'Type 2',dcPlug:'CCS',clearance:'~185 мм'},
+    trims:[
+      {id:'evitara_49',name:'Motion 49kWh FWD',battery:'49 кВт·год',range:'344 км',power:'142 к.с.',accel:'9.6 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'90 кВт',dcTime:'~45 хв',price:'~€30–32K',warranty:'5 р / 100 000 км'},
+      {id:'evitara_61',name:'Ultra 61kWh AWD',battery:'61 кВт·год',range:'426 км',power:'184 к.с.',accel:'7.4 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'90 кВт',dcTime:'~45 хв',price:'~€34–37K',warranty:'5 р / 100 000 км'}
     ]
   },
 ];
