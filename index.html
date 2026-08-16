@@ -442,7 +442,7 @@ const INCLUDED_CATS = {"safety": "🔒 Безпека", "media": "🎵 Муль�
 // ─── POLO REFERENCE ───────────────────────────────────────────────────
 const POLO = {
   power: '115 к.с.', accel: '9.5 с', topSpeed: '196 км/год',
-  len: '4.05 м', width: '1.75 м', height: '1.46 м', trunk: '351 л'
+  len: '4.05 м', width: '1.75 м', height: '1.46 м', trunk: '351 л', clearance: '148 мм'
 };
 
 // ─── BUILT-IN MODELS ──────────────────────────────────────────────────
@@ -450,13 +450,13 @@ const BUILTIN_MODELS = [
   {
     id:'inster',icon:'🚙',name:'Hyundai INSTER',dealer:'Hyundai (Qormi)',
     photos:[],
-    shared:{len:'3.83 м',width:'1.61 м',height:'1.58 м',trunk:'280 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'3.83 м',width:'1.61 м',height:'1.58 м',trunk:'280 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',clearance:'~178 мм'},
     trims:[{id:'inster_std',name:'Standard Range',battery:'42 кВт·год',range:'355 км',power:'97 к.с.',accel:'10.6 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'85 кВт',dcTime:'~30 хв',price:'€23–26k',warranty:'5 р / 150 000 км'}]
   },
   {
     id:'r5',icon:'🚗',name:'Renault 5 E-Tech',dealer:'Auto Sales (Lija)',
     photos:[],
-    shared:{len:'3.92 м',width:'1.77 м',height:'1.50 м',trunk:'277 л',seats:'5',ncap:'5 зірок (2024)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'3.92 м',width:'1.77 м',height:'1.50 м',trunk:'277 л',seats:'5',ncap:'5 зірок (2024)',acPlug:'Type 2',dcPlug:'CCS',clearance:'145 мм'},
     trims:[
       {id:'r5_40',name:'40 kWh Evolution',battery:'40 кВт·год',range:'312 км',power:'120 к.с.',accel:'9.4 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'80 кВт',dcTime:'~35 хв',price:'~€27,900',warranty:'5 р / 100 000 км'},
       {id:'r5_52',name:'52 kWh Iconic',battery:'52 кВт·год',range:'410 км',power:'150 к.с.',accel:'7.5 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~30 хв',price:'~€30,500',warranty:'5 р / 100 000 км'}
@@ -465,19 +465,19 @@ const BUILTIN_MODELS = [
   {
     id:'fiat500',icon:'🚙',name:'Fiat 500e',dealer:'Fiat/Alfa/Jeep (Qormi)',
     photos:[],
-    shared:{len:'3.63 м',width:'1.68 м',height:'1.53 м',trunk:'185 л',seats:'4',ncap:'—',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'3.63 м',width:'1.68 м',height:'1.53 м',trunk:'185 л',seats:'4',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',clearance:'~136 мм'},
     trims:[{id:'fiat500_std',name:'42 kWh',battery:'42 кВт·год',range:'320 км',power:'118 к.с.',accel:'9.0 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'85 кВт',dcTime:'~35 хв',price:'~€28–35k',warranty:'3 р / 120 000 км'}]
   },
   {
     id:'ec3',icon:'🚗',name:'Citroën ë-C3',dealer:'Citroën (Attard)',
     photos:[],
-    shared:{len:'4.01 м',width:'1.76 м',height:'1.58 м',trunk:'310 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',note:'Схожа на Opel Frontera за ціною'},
+    shared:{len:'4.01 м',width:'1.76 м',height:'1.58 м',trunk:'310 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',note:'Схожа на Opel Frontera за ціною',clearance:'163 мм'},
     trims:[{id:'ec3_std',name:'44 kWh',battery:'44 кВт·год',range:'320 км',power:'113 к.с.',accel:'11.0 с',topSpeed:'135 км/год',acKw:'7.4 кВт',dcKw:'100 кВт',dcTime:'~26 хв',price:'~€23–27k',warranty:'3 р / 60 000 км'}]
   },
   {
     id:'frontera',icon:'🚙',name:'Opel Frontera Electric',dealer:'Opel (Attard)',
     photos:[],
-    shared:{len:'4.39 м',width:'1.80 м',height:'1.65 м',trunk:'460 л (1600 л скл.)',seats:'5 (GS Hybrid — 7)',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',note:'LFP батарея. Дата оферу: 08/08/2026'},
+    shared:{len:'4.39 м',width:'1.80 м',height:'1.65 м',trunk:'460 л (1600 л скл.)',seats:'5 (GS Hybrid — 7)',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',note:'LFP батарея. Дата оферу: 08/08/2026',clearance:'~178 мм'},
     trims:[
       {id:'frontera_ed',name:'Edition — 44 kWh (303 km)',battery:'44 кВт·год',range:'303 км',power:'113 к.с. (83 кВт)',accel:'—',topSpeed:'143 км/год',acKw:'7.4 кВт (11 кВт опція)',dcKw:'100 кВт',dcTime:'26 хв',price:'€29,250',warranty:'8 р / 160 000 км (батарея)'},
       {id:'frontera_edp',name:'Edition Pack — 44 kWh (303 km)',battery:'44 кВт·год',range:'303 км',power:'113 к.с. (83 кВт)',accel:'—',topSpeed:'143 км/год',acKw:'7.4 кВт (11 кВт опція)',dcKw:'100 кВт',dcTime:'26 хв',price:'€29,800',warranty:'8 р / 160 000 км (батарея)'},
@@ -488,19 +488,19 @@ const BUILTIN_MODELS = [
   {
     id:'e208',icon:'🚗',name:'Peugeot e-208',dealer:'Peugeot (Ħamrun)',
     photos:[],
-    shared:{len:'4.06 м',width:'1.75 м',height:'1.43 м',trunk:'311 л',seats:'5',ncap:'5 зірок (2019)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.06 м',width:'1.75 м',height:'1.43 м',trunk:'311 л',seats:'5',ncap:'5 зірок (2019)',acPlug:'Type 2',dcPlug:'CCS',clearance:'130 мм'},
     trims:[{id:'e208_std',name:'51 kWh',battery:'51 кВт·год',range:'400 км',power:'136 к.с.',accel:'8.1 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~26 хв',price:'~€33–38k',warranty:'3 р / 100 000 км'}]
   },
   {
     id:'corsa',icon:'🚗',name:'Opel Corsa Electric',dealer:'Opel (Attard)',
     photos:[],
-    shared:{len:'4.06 м',width:'1.77 м',height:'1.43 м',trunk:'311 л',seats:'5',ncap:'5 зірок (2019)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ Запасний варіант'},
+    shared:{len:'4.06 м',width:'1.77 м',height:'1.43 м',trunk:'311 л',seats:'5',ncap:'5 зірок (2019)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ Запасний варіант',clearance:'164 мм'},
     trims:[{id:'corsa_std',name:'51 kWh',battery:'51 кВт·год',range:'402 км',power:'136 к.с.',accel:'8.1 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~26 хв',price:'~€30–35k',warranty:'3 р / 100 000 км'}]
   },
   {
     id:'leaf',icon:'🚙',name:'Nissan Leaf',dealer:'Nissan (Blata l-Bajda)',
     photos:[],
-    shared:{len:'4.48 м',width:'1.79 м',height:'1.54 м',trunk:'435 л',seats:'5',ncap:'5 зірок (2018)',acPlug:'Type 2',dcPlug:'CHAdeMO'},
+    shared:{len:'4.48 м',width:'1.79 м',height:'1.54 м',trunk:'435 л',seats:'5',ncap:'5 зірок (2018)',acPlug:'Type 2',dcPlug:'CHAdeMO',clearance:'150 мм'},
     trims:[
       {id:'leaf_40',name:'40 kWh',battery:'40 кВт·год',range:'270 км',power:'150 к.с.',accel:'7.9 с',topSpeed:'144 км/год',acKw:'6.6 кВт',dcKw:'50 кВт',dcTime:'~40 хв',price:'~€25k',warranty:'5 р / 100 000 км'},
       {id:'leaf_62',name:'62 kWh e+',battery:'62 кВт·год',range:'385 км',power:'217 к.с.',accel:'6.5 с',topSpeed:'158 км/год',acKw:'6.6 кВт',dcKw:'50 кВт',dcTime:'~60 хв',price:'~€30k',warranty:'5 р / 100 000 км'}
@@ -509,7 +509,7 @@ const BUILTIN_MODELS = [
   {
     id:'ev3',icon:'⚡',name:'Kia EV3',dealer:'Kia (Qormi)',
     photos:[],
-    shared:{len:'4.31 м',width:'1.85 м',height:'1.56 м',trunk:'460 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.31 м',width:'1.85 м',height:'1.56 м',trunk:'460 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',clearance:'140 мм'},
     trims:[
       {id:'ev3_58',name:'58.3 kWh Standard',battery:'58.3 кВт·год',range:'~430 км',power:'150 к.с.',accel:'7.7 с',topSpeed:'170 км/год',acKw:'11 кВт',dcKw:'101 кВт',dcTime:'~31 хв',price:'~€33k',warranty:'7 р / 150 000 км'},
       {id:'ev3_81',name:'81.4 kWh Long Range',battery:'81.4 кВт·год',range:'~600 км',power:'204 к.с.',accel:'5.3 с',topSpeed:'170 км/год',acKw:'11 кВт',dcKw:'135 кВт',dcTime:'~31 хв',price:'~€40k',warranty:'7 р / 150 000 км'}
@@ -518,7 +518,7 @@ const BUILTIN_MODELS = [
   {
     id:'raval',icon:'⚡',name:'Cupra Raval',dealer:'Continental Cars (Msida)',
     photos:[],
-    shared:{len:'4.05 м',width:'1.78 м',height:'1.51 м',trunk:'441 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',note:'Очікується ~10 авто кінець серпня / початок вересня 2026'},
+    shared:{len:'4.05 м',width:'1.78 м',height:'1.51 м',trunk:'441 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',note:'Очікується ~10 авто кінець серпня / початок вересня 2026',clearance:'~160 мм'},
     trims:[
       {id:'raval_plus',name:'Raval Plus — 37 kWh',battery:'37 кВт·год',range:'323 км',power:'135 к.с. (99 кВт)',accel:'—',topSpeed:'—',acKw:'7.4 кВт',dcKw:'50 кВт',dcTime:'—',price:'€28,900 (€19,900 з грантом+утил.)',warranty:'5 р / Parts & Labour'},
       {id:'raval_end',name:'Raval Endurance — 52 kWh',battery:'52 кВт·год',range:'413–446 км',power:'211 к.с. (155 кВт)',accel:'—',topSpeed:'—',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'—',price:'€33,900 (€24,900 з грантом+утил.)',warranty:'5 р / Parts & Labour'},
@@ -528,7 +528,7 @@ const BUILTIN_MODELS = [
   {
     id:'born',icon:'⚡',name:'Cupra Born',dealer:'Continental Cars (Msida)',
     photos:[],
-    shared:{len:'4.32 м',width:'1.81 м',height:'1.54 м',trunk:'385 л',seats:'5',ncap:'5 зірок (2021)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ Немає в наявності — тільки під замовлення'},
+    shared:{len:'4.32 м',width:'1.81 м',height:'1.54 м',trunk:'385 л',seats:'5',ncap:'5 зірок (2021)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ Немає в наявності — тільки під замовлення',clearance:'150 мм'},
     trims:[
       {id:'born_58',name:'58 kWh — Standard',battery:'58 кВт·год',range:'424 км',power:'150 кВт',accel:'7.8 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'130 кВт',dcTime:'~30 хв',price:'€39,900 (до гранту)',warranty:'5 р / 100 000 км'}
     ]
@@ -536,7 +536,7 @@ const BUILTIN_MODELS = [
   {
     id:'r4',icon:'🚙',name:'Renault 4 E-Tech',dealer:'Auto Sales (Lija)',
     photos:[],
-    shared:{len:'4.14 м',width:'1.80 м',height:'1.63 м',trunk:'420 л',seats:'5',ncap:'5 зірок (2024)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.14 м',width:'1.80 м',height:'1.63 м',trunk:'420 л',seats:'5',ncap:'5 зірок (2024)',acPlug:'Type 2',dcPlug:'CCS',clearance:'181 мм'},
     trims:[
       {id:'r4_40',name:'40 kWh',battery:'40 кВт·год',range:'300 км',power:'120 к.с.',accel:'10.0 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'80 кВт',dcTime:'~35 хв',price:'~€29k',warranty:'5 р / 100 000 км'},
       {id:'r4_52',name:'52 kWh',battery:'52 кВт·год',range:'410 км',power:'150 к.с.',accel:'8.0 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~30 хв',price:'~€32k',warranty:'5 р / 100 000 км'}
@@ -545,7 +545,7 @@ const BUILTIN_MODELS = [
   {
     id:'kona',icon:'🚗',name:'Hyundai Kona Electric',dealer:'Hyundai (Qormi)',
     photos:[],
-    shared:{len:'4.35 м',width:'1.83 м',height:'1.59 м',trunk:'466 л',seats:'5',ncap:'5 зірок (2023)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.35 м',width:'1.83 м',height:'1.59 м',trunk:'466 л',seats:'5',ncap:'5 зірок (2023)',acPlug:'Type 2',dcPlug:'CCS',clearance:'158 мм'},
     trims:[
       {id:'kona_48',name:'48.4 kWh',battery:'48.4 кВт·год',range:'342 км',power:'115 к.с.',accel:'9.4 с',topSpeed:'162 км/год',acKw:'11 кВт',dcKw:'72 кВт',dcTime:'~43 хв',price:'~€30k',warranty:'5 р / 150 000 км'},
       {id:'kona_65',name:'65.4 kWh',battery:'65.4 кВт·год',range:'514 км',power:'218 к.с.',accel:'5.9 с',topSpeed:'185 км/год',acKw:'11 кВт',dcKw:'102 кВт',dcTime:'~43 хв',price:'~€35k',warranty:'5 р / 150 000 км'}
@@ -554,7 +554,7 @@ const BUILTIN_MODELS = [
   {
     id:'id3',icon:'⚡',name:'VW ID.3',dealer:'VW/Cupra (Msida)',
     photos:[],
-    shared:{len:'4.26 м',width:'1.81 м',height:'1.55 м',trunk:'385 л',seats:'5',ncap:'5 зірок (2023)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ Очікується кінець 2026 року'},
+    shared:{len:'4.26 м',width:'1.81 м',height:'1.55 м',trunk:'385 л',seats:'5',ncap:'5 зірок (2023)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ Очікується кінець 2026 року',clearance:'150 мм'},
     trims:[
       {id:'id3_58',name:'58 kWh Pro',battery:'58 кВт·год',range:'350 км',power:'150 к.с.',accel:'8.4 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'120 кВт',dcTime:'~28 хв',price:'~€35k',warranty:'5 р / 100 000 км'},
       {id:'id3_82',name:'82 kWh Pro S',battery:'82 кВт·год',range:'570 км',power:'204 к.с.',accel:'7.3 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'135 кВт',dcTime:'~28 хв',price:'~€42k',warranty:'5 р / 100 000 км'}
@@ -563,14 +563,14 @@ const BUILTIN_MODELS = [
   {
     id:'eny1',icon:'🚗',name:'Honda e:Ny1',dealer:'GasanZammit (Birkirkara)',
     photos:[],
-    shared:{len:'4.39 м',width:'1.79 м',height:'1.58 м',trunk:'346 л',seats:'5',ncap:'5 зірок (2023)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.39 м',width:'1.79 м',height:'1.58 м',trunk:'346 л',seats:'5',ncap:'5 зірок (2023)',acPlug:'Type 2',dcPlug:'CCS',clearance:'135 мм'},
     trims:[{id:'eny1_std',name:'68.8 kWh',battery:'68.8 кВт·год',range:'412 км',power:'204 к.с.',accel:'7.7 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'78 кВт',dcTime:'~45 хв',price:'~€38–45k',warranty:'5 р / 100 000 км'}]
   },
   // ─── DACIA (Auto Sales, Lija) ──────────────────────────────────────
   {
     id:'spring',name:'Dacia Spring',icon:'🌱',brand:'dacia',
     photos:[],
-    shared:{len:'3.70 м',width:'1.58 м',height:'1.49 м',trunk:'308 л',seats:'4',ncap:'1 зірка (2021)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ >€40K: ні | >4.5м: ні'},
+    shared:{len:'3.70 м',width:'1.58 м',height:'1.49 м',trunk:'308 л',seats:'4',ncap:'1 зірка (2021)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ >€40K: ні | >4.5м: ні',clearance:'150 мм'},
     trims:[
       {id:'spring_45',name:'Expression 45',battery:'26.8 кВт·год',range:'220 км',power:'44 к.с.',accel:'19 с',topSpeed:'125 км/год',acKw:'7 кВт',dcKw:'30 кВт',dcTime:'~45 хв',price:'~€19K',warranty:'5 р / 100 000 км'},
       {id:'spring_65',name:'Extreme 65',battery:'26.8 кВт·год',range:'225 км',power:'65 к.с.',accel:'13.7 с',topSpeed:'125 км/год',acKw:'7 кВт',dcKw:'30 кВт',dcTime:'~40 хв',price:'~€20K',warranty:'5 р / 100 000 км'}
@@ -580,7 +580,7 @@ const BUILTIN_MODELS = [
   {
     id:'zoe',name:'Renault Zoe',icon:'⚡',brand:'renault',
     photos:[],
-    shared:{len:'4.09 м',width:'1.79 м',height:'1.56 м',trunk:'338 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ While stocks last'},
+    shared:{len:'4.09 м',width:'1.79 м',height:'1.56 м',trunk:'338 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ While stocks last',clearance:'~148 мм'},
     trims:[
       {id:'zoe_r135',name:'Evolution R135 EV50',battery:'52 кВт·год',range:'380 км',power:'135 к.с.',accel:'9.5 с',topSpeed:'140 км/год',acKw:'22 кВт',dcKw:'50 кВт',dcTime:'~60 хв',price:'~€27K',warranty:'3 р / 100 000 км'}
     ]
@@ -588,7 +588,7 @@ const BUILTIN_MODELS = [
   {
     id:'megane_e',name:'Renault Megane E-Tech',icon:'⚡',brand:'renault',
     photos:[],
-    shared:{len:'4.21 м',width:'1.77 м',height:'1.50 м',trunk:'440 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.21 м',width:'1.77 м',height:'1.50 м',trunk:'440 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS',clearance:'135 мм'},
     trims:[
       {id:'megane_ev60',name:'Techno EV60 220hp',battery:'60 кВт·год',range:'450 км',power:'220 к.с.',accel:'7.4 с',topSpeed:'160 км/год',acKw:'22 кВт',dcKw:'130 кВт',dcTime:'~30 хв',price:'~€38K',warranty:'3 р / 100 000 км'}
     ]
@@ -596,7 +596,7 @@ const BUILTIN_MODELS = [
   {
     id:'scenic_e',name:'Renault Scenic E-Tech',icon:'⚡',brand:'renault',
     photos:[],
-    shared:{len:'4.47 м',width:'1.86 м',height:'1.57 м',trunk:'545 л',seats:'5',ncap:'5 зірок (2024)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.47 м',width:'1.86 м',height:'1.57 м',trunk:'545 л',seats:'5',ncap:'5 зірок (2024)',acPlug:'Type 2',dcPlug:'CCS',clearance:'~170 мм'},
     trims:[
       {id:'scenic_ev60',name:'Techno EV60 170hp',battery:'60 кВт·год',range:'430 км',power:'170 к.с.',accel:'9.3 с',topSpeed:'150 км/год',acKw:'22 кВт',dcKw:'130 кВт',dcTime:'~30 хв',price:'~€40K',warranty:'3 р / 100 000 км'},
       {id:'scenic_ev87',name:'Techno EV87 220hp',battery:'87 кВт·год',range:'625 км',power:'220 к.с.',accel:'7.9 с',topSpeed:'170 км/год',acKw:'22 кВт',dcKw:'150 кВт',dcTime:'~37 хв',price:'~€45K',warranty:'3 р / 100 000 км'}
@@ -606,7 +606,7 @@ const BUILTIN_MODELS = [
   {
     id:'e2008',name:'Peugeot e-2008',icon:'🦁',brand:'peugeot',
     photos:[],
-    shared:{len:'4.30 м',width:'1.77 м',height:'1.53 м',trunk:'434 л',seats:'5',ncap:'4 зірки (2020)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.30 м',width:'1.77 м',height:'1.53 м',trunk:'434 л',seats:'5',ncap:'4 зірки (2020)',acPlug:'Type 2',dcPlug:'CCS',clearance:'189 мм'},
     trims:[
       {id:'e2008_std',name:'Allure 54kWh',battery:'54 кВт·год',range:'345 км',power:'136 к.с.',accel:'9.0 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~30 хв',price:'~€34K',warranty:'3 р / 100 000 км'}
     ]
@@ -614,7 +614,7 @@ const BUILTIN_MODELS = [
   {
     id:'e308',name:'Peugeot e-308',icon:'🦁',brand:'peugeot',
     photos:[],
-    shared:{len:'4.37 м',width:'1.85 м',height:'1.44 м',trunk:'361 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.37 м',width:'1.85 м',height:'1.44 м',trunk:'361 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS',clearance:'140 мм'},
     trims:[
       {id:'e308_std',name:'Allure 54kWh',battery:'54 кВт·год',range:'413 км',power:'156 к.с.',accel:'9.0 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~30 хв',price:'~€37K',warranty:'3 р / 100 000 км'}
     ]
@@ -623,7 +623,7 @@ const BUILTIN_MODELS = [
   {
     id:'ariya',name:'Nissan Ariya',icon:'🔴',brand:'nissan',
     photos:[],
-    shared:{len:'4.60 м',width:'1.85 м',height:'1.66 м',trunk:'468 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ >€40K | >4.5м'},
+    shared:{len:'4.60 м',width:'1.85 м',height:'1.66 м',trunk:'468 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ >€40K | >4.5м',clearance:'200 мм'},
     trims:[
       {id:'ariya_63',name:'Engage 63kWh',battery:'63 кВт·год',range:'360 км',power:'218 к.с.',accel:'7.5 с',topSpeed:'160 км/год',acKw:'22 кВт',dcKw:'130 кВт',dcTime:'~30 хв',price:'~€42K',warranty:'5 р / 100 000 км'},
       {id:'ariya_87',name:'Advance 87kWh',battery:'87 кВт·год',range:'495 км',power:'242 к.с.',accel:'7.5 с',topSpeed:'160 км/год',acKw:'22 кВт',dcKw:'130 кВт',dcTime:'~34 хв',price:'~€47K',warranty:'5 р / 100 000 км'}
@@ -632,7 +632,7 @@ const BUILTIN_MODELS = [
   {
     id:'leaf26',name:'Nissan Leaf (2026)',icon:'🍃',brand:'nissan',
     photos:[],
-    shared:{len:'4.48 м',width:'1.80 м',height:'1.56 м',trunk:'~420 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.48 м',width:'1.80 м',height:'1.56 м',trunk:'~420 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',clearance:'~150 мм'},
     trims:[
       {id:'leaf26_std',name:'60kWh',battery:'60 кВт·год',range:'~400 км',power:'~214 к.с.',accel:'~7.5 с',topSpeed:'160 км/год',acKw:'22 кВт',dcKw:'130 кВт',dcTime:'~30 хв',price:'~€36K',warranty:'5 р / 100 000 км'}
     ]
@@ -641,7 +641,7 @@ const BUILTIN_MODELS = [
   {
     id:'id4',name:'Volkswagen ID.4',icon:'⭕',brand:'vw',
     photos:[],
-    shared:{len:'4.58 м',width:'1.85 м',height:'1.63 м',trunk:'543 л',seats:'5',ncap:'5 зірок (2021)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ >€40K | >4.5м'},
+    shared:{len:'4.58 м',width:'1.85 м',height:'1.63 м',trunk:'543 л',seats:'5',ncap:'5 зірок (2021)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ >€40K | >4.5м',clearance:'210 мм'},
     trims:[
       {id:'id4_pro',name:'Pro 77kWh',battery:'77 кВт·год',range:'529 км',power:'286 к.с.',accel:'6.7 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'175 кВт',dcTime:'~28 хв',price:'~€42K',warranty:'3 р / 100 000 км'}
     ]
@@ -650,7 +650,7 @@ const BUILTIN_MODELS = [
   {
     id:'ioniq5',name:'Hyundai IONIQ 5',icon:'🔵',brand:'hyundai',
     photos:[],
-    shared:{len:'4.64 м',width:'1.89 м',height:'1.61 м',trunk:'527 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ >€40K | >4.5м'},
+    shared:{len:'4.64 м',width:'1.89 м',height:'1.61 м',trunk:'527 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ >€40K | >4.5м',clearance:'160 мм'},
     trims:[
       {id:'ioniq5_58',name:'58 kWh RWD',battery:'58 кВт·год',range:'354 км',power:'170 к.с.',accel:'8.5 с',topSpeed:'185 км/год',acKw:'11 кВт',dcKw:'350 кВт',dcTime:'~18 хв',price:'~€42K',warranty:'5 р / необмежений'},
       {id:'ioniq5_73',name:'72.6 kWh RWD',battery:'72.6 кВт·год',range:'481 км',power:'229 к.с.',accel:'7.3 с',topSpeed:'185 км/год',acKw:'11 кВт',dcKw:'350 кВт',dcTime:'~18 хв',price:'~€46K',warranty:'5 р / необмежений'}
@@ -660,7 +660,7 @@ const BUILTIN_MODELS = [
   {
     id:'elroq',name:'Škoda Elroq',icon:'💚',brand:'skoda',
     photos:[],
-    shared:{len:'4.49 м',width:'1.88 м',height:'1.63 м',trunk:'470 л',seats:'5',ncap:'5 зірок (2024)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.49 м',width:'1.88 м',height:'1.63 м',trunk:'470 л',seats:'5',ncap:'5 зірок (2024)',acPlug:'Type 2',dcPlug:'CCS',clearance:'185 мм'},
     trims:[
       {id:'elroq_60',name:'60 (170 к.с.)',battery:'55 кВт·год',range:'375 км',power:'170 к.с.',accel:'8.0 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'145 кВт',dcTime:'~25 хв',price:'~€35K',warranty:'3 р / 100 000 км'},
       {id:'elroq_85',name:'85 (286 к.с.)',battery:'82 кВт·год',range:'560 км',power:'286 к.с.',accel:'6.6 с',topSpeed:'180 км/год',acKw:'11 кВт',dcKw:'175 кВт',dcTime:'~28 хв',price:'~€40K',warranty:'3 р / 100 000 км'}
@@ -669,7 +669,7 @@ const BUILTIN_MODELS = [
   {
     id:'enyaq',name:'Škoda Enyaq',icon:'💚',brand:'skoda',
     photos:[],
-    shared:{len:'4.66 м',width:'1.88 м',height:'1.62 м',trunk:'585 л',seats:'5',ncap:'5 зірок (2021)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ >€40K | >4.5м'},
+    shared:{len:'4.66 м',width:'1.88 м',height:'1.62 м',trunk:'585 л',seats:'5',ncap:'5 зірок (2021)',acPlug:'Type 2',dcPlug:'CCS',note:'⚠️ >€40K | >4.5м',clearance:'186 мм'},
     trims:[
       {id:'enyaq_60',name:'60 (170 к.с.)',battery:'63 кВт·год',range:'395 км',power:'170 к.с.',accel:'8.1 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'145 кВт',dcTime:'~25 хв',price:'~€40K',warranty:'3 р / 100 000 км'},
       {id:'enyaq_85',name:'85 (286 к.с.)',battery:'82 кВт·год',range:'560 км',power:'286 к.с.',accel:'6.7 с',topSpeed:'180 км/год',acKw:'11 кВт',dcKw:'175 кВт',dcTime:'~28 хв',price:'~€46K',warranty:'3 р / 100 000 км'}
@@ -679,7 +679,7 @@ const BUILTIN_MODELS = [
   {
     id:'niro_ev',name:'Kia Niro EV',icon:'⚡',brand:'kia',
     photos:[],
-    shared:{len:'4.42 м',width:'1.83 м',height:'1.57 м',trunk:'475 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.42 м',width:'1.83 м',height:'1.57 м',trunk:'475 л',seats:'5',ncap:'5 зірок (2022)',acPlug:'Type 2',dcPlug:'CCS',clearance:'150 мм'},
     trims:[
       {id:'niro_ev_std',name:'Wind 64.8kWh',battery:'64.8 кВт·год',range:'460 км',power:'204 к.с.',accel:'7.8 с',topSpeed:'167 км/год',acKw:'11 кВт',dcKw:'80 кВт',dcTime:'~43 хв',price:'~€38K',warranty:'7 р / 150 000 км'}
     ]
@@ -687,7 +687,7 @@ const BUILTIN_MODELS = [
   {
     id:'ev2',name:'Kia EV2',icon:'⚡',brand:'kia',
     photos:[],
-    shared:{len:'4.06 м',width:'1.80 м',height:'1.58 м',trunk:'362 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'4.06 м',width:'1.80 м',height:'1.58 м',trunk:'362 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',clearance:'~148 мм'},
     trims:[
       {id:'ev2_42',name:'Standard 42kWh',battery:'42.2 кВт·год',range:'317 км',power:'144 к.с.',accel:'9.5 с',topSpeed:'160 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~30 хв',price:'~€27K',warranty:'7 р / 150 000 км'},
       {id:'ev2_61',name:'Long Range 61kWh',battery:'61 кВт·год',range:'453 км',power:'136 к.с.',accel:'9.5 с',topSpeed:'160 км/год',acKw:'22 кВт',dcKw:'118 кВт',dcTime:'~30 хв',price:'~€33K',warranty:'7 р / 150 000 км'}
@@ -697,7 +697,7 @@ const BUILTIN_MODELS = [
   {
     id:'micra_ev',name:'Nissan Micra EV',icon:'🔴',brand:'nissan',
     photos:[],
-    shared:{len:'3.95 м',width:'1.78 м',height:'1.50 м',trunk:'326 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS'},
+    shared:{len:'3.95 м',width:'1.78 м',height:'1.50 м',trunk:'326 л',seats:'5',ncap:'—',acPlug:'Type 2',dcPlug:'CCS',clearance:'~145 мм'},
     trims:[
       {id:'micra_40',name:'Standard 40kWh',battery:'40 кВт·год',range:'317 км',power:'121 к.с.',accel:'9.0 с',topSpeed:'150 км/год',acKw:'7 кВт',dcKw:'80 кВт',dcTime:'~30 хв',price:'~€27K',warranty:'5 р / 100 000 км'},
       {id:'micra_52',name:'Extended 52kWh',battery:'52 кВт·год',range:'416 км',power:'150 к.с.',accel:'8.0 с',topSpeed:'150 км/год',acKw:'11 кВт',dcKw:'100 кВт',dcTime:'~30 хв',price:'~€30K',warranty:'5 р / 100 000 км'}
@@ -1333,6 +1333,7 @@ function renderModelBlock(model,container){
             <tr><td>Довжина</td><td>${s.len||'—'} ${pr(POLO.len)}</td></tr>
             <tr><td>Ширина</td><td>${s.width||'—'} ${pr(POLO.width)}</td></tr>
             <tr><td>Висота</td><td>${s.height||'—'} ${pr(POLO.height)}</td></tr>
+            <tr><td>Кліренс</td><td>${s.clearance||'—'} ${pr(POLO.clearance)}</td></tr>
             <tr><td>Багажник</td><td>${s.trunk||'—'} ${pr(POLO.trunk)}</td></tr>
             <tr><td>Місць</td><td>${s.seats||'5'}</td></tr>
           </table>
