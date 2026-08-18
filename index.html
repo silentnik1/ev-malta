@@ -240,7 +240,15 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 .summary-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:14px;text-align:center}
 .summary-num{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;line-height:1}
 .summary-label{font-size:11px;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
-.shortlist-item{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px}
+.shortlist-item{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
+.shortlist-item:hover{border-color:var(--accent)}
+.star-btn{background:none;border:none;font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;color:var(--text3);transition:all .15s;flex-shrink:0}
+.star-btn.starred{color:#f5c518}
+.star-btn:hover{transform:scale(1.2)}
+#lightbox-prev,#lightbox-next{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);color:white;border:none;font-size:22px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:502;transition:background .2s}
+#lightbox-prev{left:16px}#lightbox-next{right:16px}
+#lightbox-prev:hover,#lightbox-next:hover{background:rgba(255,255,255,.3)}
+#lightbox-counter{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:13px;z-index:502}
 
 /* DRIVE */
 .drive-status{font-size:11px;padding:2px 7px;border-radius:4px;background:var(--surface2);color:var(--text3)}
@@ -254,9 +262,12 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 </style>
 </head>
 <body>
-<div id="lightbox" onclick="closeLightbox()">
+<div id="lightbox">
   <button id="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img id="lightbox-img" src="" alt="">
+  <button id="lightbox-prev" onclick="lbNav(-1)">&#8592;</button>
+  <img id="lightbox-img" src="" alt="" onclick="closeLightbox()" style="cursor:zoom-out">
+  <button id="lightbox-next" onclick="lbNav(1)">&#8594;</button>
+  <div id="lightbox-counter"></div>
 </div>
 <header>
   <div class="logo">EV<span>•</span>Malta</div>
@@ -794,7 +805,7 @@ const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 const FILE_NAME = 'ev_malta_tracker2.json';
 
 function getTrimData(tid){if(!userData[tid])userData[tid]={notes:'',price:'',files:[],features:{}};return userData[tid];}
-function getModelData(mid){if(!userData['m_'+mid])userData['m_'+mid]={status:'none'};return userData['m_'+mid];}
+function getModelData(mid){if(!userData['m_'+mid])userData['m_'+mid]={status:'none',starred:false};return userData['m_'+mid];}
 
 function buildModels(){
   models = [...BUILTIN_MODELS, ...customModels];
@@ -1184,7 +1195,8 @@ async function uploadModelPhoto(modelId,files){
 function updateModelGallery(modelId,urls){
   const gallery=document.getElementById('gal-'+modelId);
   if(!gallery)return;
-  const imgs=urls.map((u,i)=>`<img src="${u}" alt="" class="${i===0?'active':''}" onclick="event.stopPropagation();openLightbox(this.src)" onerror="this.style.display='none'">`).join('');
+  const urlsJson=JSON.stringify(urls).replace(/'/g,"\\'");
+  const imgs=urls.map((u,i)=>`<img src="${u}" alt="" class="${i===0?'active':''}" onclick="event.stopPropagation();openLightbox(this.src,${urlsJson},${i})" onerror="this.style.display='none'">`).join('');
   const dots=urls.length>1?`<div class="gallery-dots">${urls.map((_,i)=>`<div class="gallery-dot ${i===0?'active':''}" onclick="galleryDot('${modelId}',${i})"></div>`).join('')}</div>`:'';
   const nav=urls.length>1?`<button class="gallery-nav gallery-prev" onclick="event.stopPropagation();galleryGo('${modelId}',-1)">‹</button><button class="gallery-nav gallery-next" onclick="event.stopPropagation();galleryGo('${modelId}',1)">›</button>`:'';
   gallery.innerHTML=imgs+nav+dots;
@@ -1358,7 +1370,8 @@ function renderModelBlock(model,container){
     const photos=model.photos||[];
     let gallHtml='';
     if(photos.length){
-      const imgs=photos.map((p,i)=>`<img src="${p}" alt="${model.name}" class="${i===0?'active':''}" onclick="event.stopPropagation();openLightbox(this.src)" onerror="this.style.display='none'">`).join('');
+      const photosJson=JSON.stringify(photos).replace(/'/g,"\\'");
+      const imgs=photos.map((p,i)=>`<img src="${p}" alt="${model.name}" class="${i===0?'active':''}" onclick="event.stopPropagation();openLightbox(this.src,${photosJson},${i})" onerror="this.style.display='none'">`).join('');
       const dots=photos.length>1?`<div class="gallery-dots">${photos.map((_,i)=>`<div class="gallery-dot ${i===0?'active':''}" onclick="galleryDot('${model.id}',${i})"></div>`).join('')}</div>`:'';
       const nav=photos.length>1?`<button class="gallery-nav gallery-prev" onclick="event.stopPropagation();galleryGo('${model.id}',-1)">‹</button><button class="gallery-nav gallery-next" onclick="event.stopPropagation();galleryGo('${model.id}',1)">›</button>`:'';
       gallHtml=`<div class="photo-gallery" id="gal-${model.id}">${imgs}${nav}${dots}</div>`;
@@ -1423,6 +1436,7 @@ function renderModelBlock(model,container){
           </div>
           <div class="model-right">
             ${isCustom?`<button onclick="event.stopPropagation();openEditModel('${model.id}')" style="background:none;border:1px solid var(--border);color:var(--text3);padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer">✏️</button>`:''}
+            <button class="star-btn ${getModelData(model.id).starred?'starred':''}" id="star-${model.id}" onclick="event.stopPropagation();toggleStar('${model.id}')" title="В шортліст">${getModelData(model.id).starred?'★':'☆'}</button>
             <select class="model-status-select status-${getModelData(model.id).status}" id="msel-${model.id}" onchange="setModelStatusAuto('${model.id}',this.value)">
               ${STATUSES.map(s=>`<option value="${s.value}" ${getModelData(model.id).status===s.value?'selected':''}>${s.label}</option>`).join('')}
             </select>
@@ -1528,6 +1542,14 @@ function toggleTrim(tid){
   openTrims[tid]=!openTrims[tid];
   document.getElementById(`tdetail-${tid}`)?.classList.toggle('open',openTrims[tid]);
   document.getElementById(`tbtn-${tid}`)?.classList.toggle('open',openTrims[tid]);
+}
+
+function toggleStar(mid){
+  const d=getModelData(mid);
+  d.starred=!d.starred;
+  const btn=document.getElementById('star-'+mid);
+  if(btn){btn.textContent=d.starred?'★':'☆';btn.classList.toggle('starred',d.starred);}
+  saveLocal();saveToDrive();renderSummary();
 }
 
 function setModelStatusAuto(mid,val){
@@ -1758,27 +1780,50 @@ function deleteCustomTrim(mid,tid){
 function renderSummary(){
   const counts={interest:0,visited:0,offer:0,skip:0};
   const shortlist=[];
-  // Count brand-level statuses
   BRANDS.forEach(brand=>{
     const st=getBrandData(brand.id).status||'none';
     if(counts[st]!==undefined)counts[st]++;
   });
-  // Shortlist from model statuses
   models.forEach(model=>{
-    const st=getModelData(model.id).status||'none';
-    if(['interest','visited','offer'].includes(st))shortlist.push({model,d:getModelData(model.id)});
+    if(getModelData(model.id).starred)shortlist.push({model,d:getModelData(model.id)});
   });
   document.getElementById('summaryGrid').innerHTML=`
     <div class="summary-card"><div class="summary-num" style="color:var(--accent)">${counts.interest}</div><div class="summary-label">Бренди — цікаво</div></div>
     <div class="summary-card"><div class="summary-num" style="color:var(--accent2)">${counts.visited}</div><div class="summary-label">Відвідав</div></div>
     <div class="summary-card"><div class="summary-num" style="color:var(--danger)">${counts.skip}</div><div class="summary-label">Не цікавить</div></div>
-    <div class="summary-card"><div class="summary-num" style="color:#f97316">${shortlist.length}</div><div class="summary-label">Моделей в шортлісті</div></div>`;
+    <div class="summary-card"><div class="summary-num" style="color:#f5c518">${shortlist.length}</div><div class="summary-label">★ Шортліст</div></div>`;
   const sec=document.getElementById('shortlistSection');
-  if(!shortlist.length){sec.innerHTML='<p style="color:var(--text3);font-size:13px;margin-top:8px">Поки немає відміток. Відкрий комплектацію і встав статус.</p>';return;}
-  sec.innerHTML=`<div style="font-family:\'Space Grotesk\',sans-serif;font-size:15px;font-weight:600;margin-bottom:10px;margin-top:4px">Шортліст</div>`+
+  if(!shortlist.length){sec.innerHTML='<p style="color:var(--text3);font-size:13px;margin-top:8px">Натисни ☆ на моделі щоб додати в шортліст.</p>';return;}
+  sec.innerHTML=`<div style="font-family:\'Space Grotesk\',sans-serif;font-size:15px;font-weight:600;margin-bottom:10px;margin-top:4px">★ Шортліст</div>`+
     shortlist.map(({model,d})=>{
-      const badge=STATUSES.find(s=>s.value===d.status);
-      return`<div class="shortlist-item"><div style="font-size:20px">${model.icon||'🚗'}</div><div style="flex:1;min-width:0"><div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600">${model.name}</div><div style="font-size:12px;color:var(--text3);margin-top:1px">${model.dealer||''}</div></div><span class="status-badge status-${d.status}">${badge.label}</span></div>`;
+      const badge=STATUSES.find(s=>s.value===d.status)||STATUSES[0];
+      const s=model.shared||{};
+      // Min price from trims
+      const prices=(model.trims||[]).map(t=>t.price).filter(Boolean);
+      const priceStr=prices.length?prices[0]:'—';
+      // Battery + range from first trim
+      const t0=model.trims?.[0]||{};
+      const specStr=[t0.battery,t0.range].filter(Boolean).join(' · ');
+      // Size flag
+      const lenNum=parseFloat((s.len||'').replace(',','.'));
+      const sizeWarn=lenNum>4.5?' <span style="color:var(--warn);font-size:10px">⚠️ >4.5м</span>':'';
+      const brand=BRANDS.find(b=>b.modelIds&&b.modelIds.includes(model.id));
+      return`<div class="shortlist-item" onclick="openBrandToModel('${brand?.id||''}','${model.id}')">
+        <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:18px">${model.icon||'🚗'}</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600">${model.name}</span>
+            <span class="status-badge status-${d.status}" style="margin-left:auto">${badge.label}</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--text2)">
+            ${priceStr?`<span>${priceStr}</span>`:''}
+            ${specStr?`<span>${specStr}</span>`:''}
+            ${s.clearance?`<span>Кліренс: ${s.clearance}</span>`:''}
+            ${s.len?`<span>Довж.: ${s.len}${sizeWarn}</span>`:''}
+          </div>
+          ${d.notes?`<div style="font-size:11px;color:var(--text3);font-style:italic">${d.notes}</div>`:''}
+        </div>
+      </div>`;
     }).join('');
 }
 
@@ -1818,20 +1863,53 @@ function switchTab(name,el){
 }
 (function(){const s=localStorage.getItem('ev_client_id');if(s)window._EV_CLIENT_ID=s;})();
 function applyClientId(){const val=document.getElementById('clientIdInput').value.trim();if(!val)return;localStorage.setItem('ev_client_id',val);closeModal('setupModal');location.reload();}
-function openLightbox(src){
-  document.getElementById('lightbox-img').src=src;
+function openBrandToModel(brandId,modelId){
+  if(!brandId)return;
+  openBrandView(brandId);
+  setTimeout(()=>{
+    if(!openModels[modelId]){openModels[modelId]=true;renderBrandModels(brandId);}
+    const el=document.getElementById('mcard-'+modelId);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  },120);
+}
+
+let lbSrcs=[],lbIdx=0;
+function openLightbox(src,allSrcs,idx){
+  lbSrcs=allSrcs||[src];lbIdx=idx!==undefined?idx:lbSrcs.indexOf(src);if(lbIdx<0)lbIdx=0;
+  lbShow();
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow='hidden';
 }
+function lbShow(){
+  document.getElementById('lightbox-img').src=lbSrcs[lbIdx]||'';
+  const c=document.getElementById('lightbox-counter');
+  c.textContent=lbSrcs.length>1?`${lbIdx+1} / ${lbSrcs.length}`:'';
+  document.getElementById('lightbox-prev').style.display=lbSrcs.length>1?'flex':'none';
+  document.getElementById('lightbox-next').style.display=lbSrcs.length>1?'flex':'none';
+}
+function lbNav(dir){lbIdx=(lbIdx+dir+lbSrcs.length)%lbSrcs.length;lbShow();}
 function closeLightbox(){
   document.getElementById('lightbox').classList.remove('open');
   document.getElementById('lightbox-img').src='';
   document.body.style.overflow='';
 }
+// Touch swipe for lightbox
+(()=>{let x0=null;
+  document.getElementById('lightbox').addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+  document.getElementById('lightbox').addEventListener('touchend',e=>{
+    if(x0===null||lbSrcs.length<2)return;
+    const dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>50)lbNav(dx<0?1:-1);
+    x0=null;
+  });
+})();
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){
-    if(document.getElementById('lightbox').classList.contains('open'))closeLightbox();
-    else if(document.getElementById('brandFullscreen').classList.contains('open'))closeBrandView();
+  if(document.getElementById('lightbox').classList.contains('open')){
+    if(e.key==='Escape')closeLightbox();
+    else if(e.key==='ArrowRight')lbNav(1);
+    else if(e.key==='ArrowLeft')lbNav(-1);
+  }else if(e.key==='Escape'){
+    if(document.getElementById('brandFullscreen').classList.contains('open'))closeBrandView();
   }
 });
 
